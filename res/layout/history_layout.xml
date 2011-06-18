@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+    <TableLayout android:id="@+id/tableLayout1" android:layout_width="200dip" android:layout_height="50dip">
+        <LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <Spinner android:layout_height="wrap_content" android:id="@+id/spinner1" android:layout_width="200dip"></Spinner>
+            <TextView android:layout_height="wrap_content" android:id="@+id/textView1" android:layout_width="wrap_content" android:text="Balance: "></TextView>
+            <TextView android:singleLine="false" android:layout_height="wrap_content" android:id="@+id/textView2" android:text="$500" android:layout_width="wrap_content"></TextView>
+        </LinearLayout>
+    </TableLayout>
+    <FrameLayout android:id="@+id/frameLayout1" android:layout_width="wrap_content" android:layout_height="fill_parent">
+        <ListView android:layout_width="fill_parent" android:id="@+id/listView1" android:layout_height="fill_parent"></ListView>
+    </FrameLayout>
+
+</TableLayout>
+

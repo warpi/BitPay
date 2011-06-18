@@ -4,7 +4,6 @@
     <string name="app_name">BitPay</string>
     <string name="balance">$500</string>
     <string name="planet_prompt">Choose a planet</string>
-    
     <string-array
         name="planets_array">
         <item>Mercury</item>
