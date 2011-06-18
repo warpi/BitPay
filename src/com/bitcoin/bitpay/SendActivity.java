@@ -12,5 +12,7 @@ public class SendActivity extends Activity {
         setContentView(R.layout.send_layout);
 
 
+        
+        
     }
 }
