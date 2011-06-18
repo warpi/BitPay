@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.bitcoin.bitpay"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="4" />
+
+    <application android:icon="@drawable/icon" android:label="@string/app_name">
+        <activity android:name=".BitPay"
+                  android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="HistoryActivity"></activity>
+        <activity android:name="ReceiveActivity"></activity>
+        <activity android:name="SendActivity"></activity>
+        <activity android:name="SettingsActivity"></activity>
+        <activity android:name="HelloSpinner"></activity>
+        
+
+    </application>
+</manifest>
