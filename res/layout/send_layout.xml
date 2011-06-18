@@ -5,7 +5,7 @@
   android:layout_height="fill_parent">
     <TableLayout android:id="@+id/tableLayout1" android:layout_width="200dip" android:layout_height="50dip">
         <LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
-            <Spinner android:layout_height="wrap_content" android:id="@+id/spinner1" android:layout_width="200dip" android:prompt="@string/planet_prompt"></Spinner>
+            <Spinner android:layout_height="wrap_content" android:layout_width="200dip" android:prompt="@string/planet_prompt" android:id="@+id/account_spinner"></Spinner>
             <TextView android:layout_height="wrap_content" android:id="@+id/textView1" android:layout_width="wrap_content" android:text="Balance: "></TextView>
             <TextView android:singleLine="false" android:layout_height="wrap_content" android:id="@+id/textView2" android:text="$500" android:layout_width="wrap_content"></TextView>
         </LinearLayout>
