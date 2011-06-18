@@ -4,6 +4,8 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TabHost;
 
 public class BitPay extends TabActivity {
@@ -50,5 +52,9 @@ public class BitPay extends TabActivity {
 		tabHost.addTab(spec);
 
 		tabHost.setCurrentTab(0);
+		
+		
 	}
+	
+	
 }

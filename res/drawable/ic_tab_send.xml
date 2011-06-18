@@ -5,8 +5,6 @@
           android:state_selected="true" />
     <!-- When not selected, use white-->
     <item android:drawable="@drawable/ic_tab_artists_white" />       
-     <Button
-     android:layout_height="wrap_content"
-     android:layout_width="wrap_content"
-     android:onClick="selfDestruct" />
+
+
 </selector>
