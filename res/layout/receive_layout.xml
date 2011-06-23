@@ -3,11 +3,16 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
-    <TableLayout android:id="@+id/tableLayout1" android:layout_width="200dip" android:layout_height="50dip">
+    <TableLayout android:layout_width="wrap_content" android:id="@+id/tableLayout1" android:layout_height="70dip">
         <LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
-            <Spinner android:layout_height="wrap_content" android:id="@+id/spinner1" android:layout_width="200dip"></Spinner>
-            <TextView android:layout_height="wrap_content" android:id="@+id/textView1" android:layout_width="wrap_content" android:text="Balance: "></TextView>
-            <TextView android:singleLine="false" android:layout_height="wrap_content" android:id="@+id/textView2" android:text="$500" android:layout_width="wrap_content"></TextView>
+            <TableLayout android:layout_height="fill_parent" android:layout_width="220dip" android:id="@+id/account_layout2">
+                <TextView android:text="Account:" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/account_text2"></TextView>
+                <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/account_address2"></TextView>
+            </TableLayout>
+            <TableLayout android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/balance_layout2">
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/balance_text2" android:text="Balance:"></TextView>
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/balance2" android:text="0 BTC"></TextView>
+            </TableLayout>
         </LinearLayout>
     </TableLayout>
 

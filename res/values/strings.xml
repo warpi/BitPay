@@ -3,17 +3,11 @@
     <string name="hello">Hello World, BitPay!</string>
     <string name="app_name">BitPay</string>
     <string name="balance">$500</string>
-    <string name="planet_prompt">Choose a planet</string>
+    <string name="account_prompt">Select account</string>
     <string-array
-        name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+        name="account_array">
+        <item>174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1</item>
+        <item>444MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1</item>
     </string-array>
 
 </resources>
