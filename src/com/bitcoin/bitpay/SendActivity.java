@@ -15,6 +15,8 @@ public class SendActivity extends Activity implements OnClickListener {
 	private TextView balanceTextView;
 	private EditText amountText;
 	
+	private TextView receiveAccountTextView;
+	
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,13 +29,18 @@ public class SendActivity extends Activity implements OnClickListener {
 		balanceTextView = (TextView) findViewById(R.id.balance1);
 		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
 		
-		Button button1 = (Button) findViewById(R.id.button1);
+		
+		receiveAccountTextView = (TextView) findViewById(R.id.receive_account);
+		receiveAccountTextView.setText(BitPayObj.getBitPayObj().getReceiverAccount());
+		
+		
+		Button button1 = (Button) findViewById(R.id.from_camera_button);
 		button1.setOnClickListener(this);
 
-		Button button2 = (Button) findViewById(R.id.button2);
+		Button button2 = (Button) findViewById(R.id.send_button);
 		button2.setOnClickListener(this);
 
-		amountText = (EditText)  findViewById(R.id.editText1);
+		amountText = (EditText)  findViewById(R.id.input_amount);
 		
 	}
     
@@ -43,15 +50,16 @@ public class SendActivity extends Activity implements OnClickListener {
         Log.v(TAG, "onResume");
         accountTextView.setText(BitPayObj.getBitPayObj().getAccount());
         balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
+        receiveAccountTextView.setText(BitPayObj.getBitPayObj().getReceiverAccount());
         
     }	
 
 	@Override
 	public void onClick(View arg0) {
-		if (R.id.button1 == arg0.getId()) {
-			Log.v(TAG, "onClick: button1");
-		} else if (R.id.button2 == arg0.getId()) {
-			Log.v(TAG, "onClick: Send, send " + this.amountText.getText().toString() + " to " + BitPayObj.getBitPayObj().getAccount());
+		if (R.id.from_camera_button == arg0.getId()) {
+			Log.v(TAG, "onClick: from camera button");
+		} else if (R.id.send_button == arg0.getId()) {
+			Log.v(TAG, "onClick: Send, send " + this.amountText.getText().toString() + " to " + BitPayObj.getBitPayObj().getReceiverAccount());
 		}
 	}
 	
