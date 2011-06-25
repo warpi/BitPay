@@ -12,6 +12,12 @@ public class BitPayObj implements Runnable {
 		this.account = "init_accounts";
 		this.balance = "0.00";
 		this.receive_account = "none";
+		
+		//TODO open sql to get userdata, accountURL....
+		
+		//TODO open https connection to get balance and accountNumber.....
+		
+		
 
 		new Thread(this).start();
 	}

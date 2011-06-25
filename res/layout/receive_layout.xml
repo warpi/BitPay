@@ -15,6 +15,9 @@
             </TableLayout>
         </LinearLayout>
     </TableLayout>
+    <FrameLayout android:layout_height="fill_parent" android:id="@+id/frameLayout1" android:layout_width="wrap_content">
+        <ImageView android:src="@drawable/icon" android:id="@+id/imageView1" android:layout_width="fill_parent" android:layout_height="fill_parent"></ImageView>
+    </FrameLayout>
 
 </TableLayout>
 
