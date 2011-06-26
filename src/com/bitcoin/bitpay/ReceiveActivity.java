@@ -8,8 +8,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.net.Uri.Builder;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,11 +23,12 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
-public class ReceiveActivity extends Activity {
+public class ReceiveActivity extends Activity implements TextWatcher {
 
 	private TextView accountTextView;
 	private TextView balanceTextView;
 	private QRCodeWriter qrCodeWriter = new QRCodeWriter();
+	private EditText receiveAmountText;
 
 	private static final int WHITE = 0xFFFFFFFF;
 	private static final int BLACK = 0xFF000000;
@@ -39,6 +43,13 @@ public class ReceiveActivity extends Activity {
 
 		balanceTextView = (TextView) findViewById(R.id.balance2);
 		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
+		
+		receiveAmountText = (EditText) findViewById(R.id.receive_amount);
+		receiveAmountText.addTextChangedListener(this);
+		
+		
+		Double recAmount = Double.parseDouble("" + receiveAmountText.getText());
+		showQrBitmap("174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1", recAmount, "test trans", "test");
 
 	}
 
@@ -48,8 +59,7 @@ public class ReceiveActivity extends Activity {
 		Log.v(TAG, "onResume");
 		accountTextView.setText(BitPayObj.getBitPayObj().getAccount());
 		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
-		
-		showQrBitmap("174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1", 0.001, "test trans", "test");
+
 	}
 
 	private void showQrBitmap(String btcAddress, Double amount, String label,
@@ -101,5 +111,25 @@ public class ReceiveActivity extends Activity {
 	}
 
 	private static final String TAG = "receive_tab";
+
+	@Override
+	public void afterTextChanged(Editable s) {
+		// TODO Auto-generated method stub
+		Double recAmount = Double.parseDouble("" + receiveAmountText.getText());
+		showQrBitmap("174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1", recAmount, "test trans", "test");
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -1,5 +1,7 @@
 package com.bitcoin.bitpay;
 
+import java.util.Vector;
+
 import android.util.Log;
 
 public class BitPayObj implements Runnable {
@@ -8,6 +10,8 @@ public class BitPayObj implements Runnable {
 	private String balance;
 	private String receive_account;
 
+	private Vector<BitPayAccount> accountVector = new Vector<BitPayAccount>();
+	
 	private BitPayObj() {
 		this.account = "init_accounts";
 		this.balance = "0.00";
