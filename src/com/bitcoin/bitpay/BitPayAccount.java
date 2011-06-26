@@ -35,4 +35,8 @@ public class BitPayAccount {
 		this.accountURL = accountURL;
 	}
 	
+	public String toString()	{
+		return this.accountName;		
+	}
+	
 }

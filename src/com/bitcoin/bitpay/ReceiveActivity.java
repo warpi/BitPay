@@ -25,7 +25,10 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 public class ReceiveActivity extends Activity implements TextWatcher {
 
-	private TextView accountTextView;
+	
+	private TextView accountNameTextView;
+	private TextView accountAddressTextView;
+	
 	private TextView balanceTextView;
 	private QRCodeWriter qrCodeWriter = new QRCodeWriter();
 	private EditText receiveAmountText;
@@ -37,9 +40,13 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.receive_layout);
 
-		accountTextView = (TextView) findViewById(R.id.account_address2);
-		accountTextView.setText(BitPayObj.getBitPayObj().getAccount());
-		accountTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		accountNameTextView = (TextView) findViewById(R.id.account_name2);
+		accountNameTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounName());
+		accountNameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+		accountAddressTextView = (TextView) findViewById(R.id.account_address2);
+		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
+		accountAddressTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
 		balanceTextView = (TextView) findViewById(R.id.balance2);
 		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
@@ -57,7 +64,8 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 	protected void onResume() {
 		super.onResume();
 		Log.v(TAG, "onResume");
-		accountTextView.setText(BitPayObj.getBitPayObj().getAccount());
+		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
+		accountNameTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounName());
 		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
 
 	}

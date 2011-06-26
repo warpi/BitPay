@@ -7,8 +7,9 @@ import android.util.Log;
 import android.widget.TextView;
 
 public class HistoryActivity extends Activity {
+	private TextView accountNameTextView;
+	private TextView accountAddressTextView;
 	
-	private TextView accountTextView;
 	private TextView balanceTextView;
 	
 	
@@ -16,9 +17,14 @@ public class HistoryActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_layout);
         
-		accountTextView = (TextView) findViewById(R.id.account_address3);
-		accountTextView.setText(BitPayObj.getBitPayObj().getAccount());
-		accountTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		accountNameTextView = (TextView) findViewById(R.id.account_name3);
+		accountNameTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounName());
+		accountNameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+		accountAddressTextView = (TextView) findViewById(R.id.account_address3);
+		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
+		accountAddressTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
 		
 		balanceTextView = (TextView) findViewById(R.id.balance3);
 		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
@@ -30,7 +36,8 @@ public class HistoryActivity extends Activity {
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume");
-        accountTextView.setText(BitPayObj.getBitPayObj().getAccount());
+		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
+		accountNameTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounName());
         balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
     }
 	

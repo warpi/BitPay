@@ -6,34 +6,46 @@ import android.util.Log;
 
 public class BitPayObj implements Runnable {
 
-	private String account;
+	private BitPayAccount account;
 	private String balance;
 	private String receive_account;
 
-	private Vector<BitPayAccount> accountVector = new Vector<BitPayAccount>();
+	private Vector<BitPayAccount> accountVector;
+	
 	
 	private BitPayObj() {
-		this.account = "init_accounts";
 		this.balance = "0.00";
 		this.receive_account = "none";
+		accountVector = new Vector<BitPayAccount>();
+		
+		
+	
+		
 		
 		//TODO open sql to get userdata, accountURL....
-		
 		//TODO open https connection to get balance and accountNumber.....
+		
+		//FIXME
+		this.accountVector.add(new BitPayAccount("My Account_1", "174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1", "https://www.instawallet.org/w/9ODM4oWAiq9oXE4Ji6qTsg"));
+		this.accountVector.add(new BitPayAccount("My Account_2", "174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1", "https://www.instawallet.org/w/9ODM4oWAiq9oXE4Ji6qTsg"));
+		this.account = this.accountVector.get(0);	
+		
 		
 		
 
 		new Thread(this).start();
 	}
 
-	public String getAccount() {
+	
+	public Vector<BitPayAccount> getAccountVector() {
+		return this.accountVector;
+	}
+	public BitPayAccount getAccount() {
 		return this.account;
 	}
-
-	public void setAccount(String account) {
+	public void setAccount(BitPayAccount account) {
 		this.account = account;
 	}
-
 	public String getReceiverAccount() {
 		return this.receive_account;
 	}

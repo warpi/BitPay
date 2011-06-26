@@ -14,19 +14,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SendActivity extends Activity implements OnClickListener {
-	private TextView accountTextView;
+	private TextView accountNameTextView;
+	private TextView accountAddressTextView;
 	private TextView balanceTextView;
 	private EditText amountText;
 
 	private TextView receiveAccountTextView;
-
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.send_layout);
 
-		accountTextView = (TextView) findViewById(R.id.account_address1);
-		accountTextView.setText(BitPayObj.getBitPayObj().getAccount());
-		accountTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		
+		accountNameTextView = (TextView) findViewById(R.id.account_name1);
+		accountNameTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounName());
+		accountNameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+		accountAddressTextView = (TextView) findViewById(R.id.account_address1);
+		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
+		accountAddressTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
 		balanceTextView = (TextView) findViewById(R.id.balance1);
 		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
@@ -49,7 +55,10 @@ public class SendActivity extends Activity implements OnClickListener {
 	protected void onResume() {
 		super.onResume();
 		Log.v(TAG, "onResume");
-		accountTextView.setText(BitPayObj.getBitPayObj().getAccount());
+
+		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
+		accountNameTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounName());
+		
 		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
 		receiveAccountTextView.setText(BitPayObj.getBitPayObj()
 				.getReceiverAccount());
@@ -69,7 +78,7 @@ public class SendActivity extends Activity implements OnClickListener {
 				Toast.makeText(this, "Install the barcode scanner!!!",
 						Toast.LENGTH_LONG).show();
 			}
-
+			
 		} else if (R.id.send_button == arg0.getId()) {
 			Log.v(TAG, "onClick: Send, send "
 					+ this.amountText.getText().toString() + " to "
@@ -101,7 +110,7 @@ public class SendActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
-		accountTextView.setText(BitPayObj.getBitPayObj().getAccount());
+		//accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
 	}
 
 	private static final String TAG = "send_tab";
