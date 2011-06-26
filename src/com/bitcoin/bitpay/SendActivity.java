@@ -98,8 +98,14 @@ public class SendActivity extends Activity implements OnClickListener {
                 Uri bitcoinUri = Uri.parse(contents);
                 
                 Log.v(TAG, "onActivityResult: Content: " + contents + " format: " + format + " Uri: " + bitcoinUri.toString());
-                		
+                
+                BitPayObj.getBitPayObj().setReceiveAccount(contents.substring(contents.indexOf("bitcoin:") + 8, contents.indexOf("?amount=")));
+                this.amountText.setText(contents.substring(contents.indexOf("?amount=") + 8, contents.indexOf("&label=")));
+                
+                onResume();
                 //ConfirmPay.callMe(this, bitcoinUri);
+                
+                
             }
             else if (resultCode == RESULT_CANCELED)
             {
