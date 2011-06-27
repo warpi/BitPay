@@ -6,10 +6,12 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 public class SettingsActivity extends Activity implements OnItemSelectedListener {
 	private TextView accountNameTextView;
@@ -31,8 +33,6 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
 		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
 		accountAddressTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-        
-        
         account_spinner = (Spinner) findViewById(R.id.account_spinner);
         
         //FIXME
@@ -48,6 +48,37 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
 		balanceTextView = (TextView) findViewById(R.id.balance4);
 		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
         
+		Button button1 = (Button)findViewById(R.id.button1);
+        Button.OnClickListener myListener = new Button.OnClickListener(){
+        	
+			@Override
+			public void onClick(View v) {
+				
+				Toast.makeText(SettingsActivity.this, "HELLO", Toast.LENGTH_LONG).show();
+				
+				BitPayObj.getBitPayObj().getAccountVector().add(new BitPayAccount("My Account_1", "174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1", "https://www.instawallet.org/w/9ODM4oWAiq9oXE4Ji6qTsg"));
+				
+			}
+			
+        };
+        
+        button1.setOnClickListener(myListener);
+		
+        Button button2 = (Button)findViewById(R.id.button2);
+        Button.OnClickListener myListener2 = new Button.OnClickListener(){
+        	
+			@Override
+			public void onClick(View v) {
+				
+				Toast.makeText(SettingsActivity.this, "HELLO", Toast.LENGTH_LONG).show();
+				
+				BitPayObj.getBitPayObj().getAccountVector().remove(new BitPayAccount("My Account_1", "174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1", "https://www.instawallet.org/w/9ODM4oWAiq9oXE4Ji6qTsg"));
+				
+			}
+			
+        };
+        
+        button2.setOnClickListener(myListener2);
        
     }
     

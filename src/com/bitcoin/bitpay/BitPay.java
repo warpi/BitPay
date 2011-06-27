@@ -1,8 +1,11 @@
 package com.bitcoin.bitpay;
 
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,6 +28,21 @@ public class BitPay extends TabActivity implements OnTouchListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+		// Creating database and table
+		SQLiteDatabase myDB;
+		myDB = openOrCreateDatabase("bitpay", Context.MODE_PRIVATE, null);
+		
+		try {
+			myDB.execSQL("drop table bitpay;");
+    	} catch (SQLException e) {
+    	}
+		
+    	try {
+    		myDB.execSQL("create table bitpay (_id integer primary key autoincrement, iw_url text not null, public_key text not null, balance text not null);");
+    	} catch (SQLException e) {
+    	}
+    	// end table
+    	
 		Resources res = getResources(); // Resource object to get Drawables
 		tabHost = getTabHost(); // The activity TabHost
 		TabHost.TabSpec spec; // Reusable TabSpec for each tab
@@ -69,6 +87,7 @@ public class BitPay extends TabActivity implements OnTouchListener,
 
 		tabHost.setOnTouchListener(this);
 		tabHost.setOnTabChangedListener(this);
+	
 	}
 
 	@Override
