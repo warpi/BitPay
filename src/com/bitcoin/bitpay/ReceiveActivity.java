@@ -10,13 +10,11 @@ import android.net.Uri.Builder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-//import com.google.bitcoin.core.Address;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -41,22 +39,19 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 		setContentView(R.layout.receive_layout);
 
 		accountNameTextView = (TextView) findViewById(R.id.account_name2);
-		accountNameTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounName());
-		accountNameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		accountNameTextView.setText("InstaWallet.org");
 
 		accountAddressTextView = (TextView) findViewById(R.id.account_address2);
-		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
-		accountAddressTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		accountAddressTextView.setText(BitPay.account_pkey);
 
 		balanceTextView = (TextView) findViewById(R.id.balance2);
-		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
+		balanceTextView.setText(BitPay.account_balance + " BTC");
 		
 		receiveAmountText = (EditText) findViewById(R.id.receive_amount);
 		receiveAmountText.addTextChangedListener(this);
 		
-		
 		Double recAmount = Double.parseDouble("" + receiveAmountText.getText());
-		showQrBitmap("174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1", recAmount, "test trans", "test");
+		showQrBitmap(BitPay.account_pkey, recAmount, "test trans", "test");
 
 	}
 
@@ -64,9 +59,7 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 	protected void onResume() {
 		super.onResume();
 		Log.v(TAG, "onResume");
-		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
-		accountNameTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounName());
-		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
+		balanceTextView.setText(BitPay.account_balance + " BTC");
 
 	}
 
@@ -122,9 +115,14 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		// TODO Auto-generated method stub
-		Double recAmount = Double.parseDouble("" + receiveAmountText.getText());
-		showQrBitmap("174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1", recAmount, "test trans", "test");
+		try	{
+			Double recAmount = Double.parseDouble("" + receiveAmountText.getText());
+			showQrBitmap(BitPay.account_pkey, recAmount, "test trans", "test");
+		}
+		catch(NumberFormatException e)	{
+			Log.v(TAG, "NumberFormatException");
+		}
+		
 	}
 
 	@Override

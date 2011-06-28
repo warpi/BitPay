@@ -1,10 +1,12 @@
 package com.bitcoin.bitpay;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +21,10 @@ public class SendActivity extends Activity implements OnClickListener {
 	private TextView balanceTextView;
 	private EditText amountText;
 
+	Pattern pattern;
+	Matcher matcher;
+	String myString;
+	
 	private TextView receiveAccountTextView;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,19 +33,16 @@ public class SendActivity extends Activity implements OnClickListener {
 
 		
 		accountNameTextView = (TextView) findViewById(R.id.account_name1);
-		accountNameTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounName());
-		accountNameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		accountNameTextView.setText("InstaWallet.org");
 
 		accountAddressTextView = (TextView) findViewById(R.id.account_address1);
-		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
-		accountAddressTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		accountAddressTextView.setText(BitPay.account_pkey);
 
 		balanceTextView = (TextView) findViewById(R.id.balance1);
-		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
+		balanceTextView.setText(BitPay.account_balance + " BTC");
 
 		receiveAccountTextView = (TextView) findViewById(R.id.receive_account);
-		receiveAccountTextView.setText(BitPayObj.getBitPayObj()
-				.getReceiverAccount());
+		receiveAccountTextView.setText(BitPay.send_pkey);
 
 		Button button1 = (Button) findViewById(R.id.from_camera_button);
 		button1.setOnClickListener(this);
@@ -55,13 +58,9 @@ public class SendActivity extends Activity implements OnClickListener {
 	protected void onResume() {
 		super.onResume();
 		Log.v(TAG, "onResume");
-
-		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
-		accountNameTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounName());
 		
-		balanceTextView.setText(BitPayObj.getBitPayObj().getBalance() + " BTC");
-		receiveAccountTextView.setText(BitPayObj.getBitPayObj()
-				.getReceiverAccount());
+		balanceTextView.setText(BitPay.account_balance + " BTC");
+		receiveAccountTextView.setText(BitPay.send_pkey);
 
 	}
 
@@ -83,6 +82,23 @@ public class SendActivity extends Activity implements OnClickListener {
 			Log.v(TAG, "onClick: Send, send "
 					+ this.amountText.getText().toString() + " to "
 					+ BitPayObj.getBitPayObj().getReceiverAccount());
+		
+			Toast.makeText(SendActivity.this, BitPay.send_pkey, Toast.LENGTH_LONG).show();
+			Toast.makeText(SendActivity.this, this.amountText.getText().toString(), Toast.LENGTH_LONG).show();
+
+			//BitPay.send_pkey = "13KzwhsJDYuo4xQv3G6CTyRjkagMp7dnrm";
+			
+			// Sending money and update balance
+    		myString = (String) BitPay.downloadHttpsUrl("https://www.instawallet.org/w/"+BitPay.account_url,"address="+BitPay.send_pkey+"&amount="+this.amountText.getText().toString());
+    		//myString = (String) BitPay.downloadHttpsUrl("https://www.instawallet.org/w/"+BitPay.account_url,"");
+			
+			// Balance in BTC
+			pattern = Pattern.compile("<span id=\"balance\">(.+?)</span>");
+    		matcher = pattern.matcher(myString);
+    		matcher.find();
+    		BitPay.account_balance = (String) matcher.group(1); // Access a submatch group
+    		balanceTextView.setText(BitPay.account_balance + " BTC");
+
 		}
 	}
 	
@@ -99,7 +115,7 @@ public class SendActivity extends Activity implements OnClickListener {
                 
                 Log.v(TAG, "onActivityResult: Content: " + contents + " format: " + format + " Uri: " + bitcoinUri.toString());
                 
-                BitPayObj.getBitPayObj().setReceiveAccount(contents.substring(contents.indexOf("bitcoin:") + 8, contents.indexOf("?amount=")));
+                BitPay.send_pkey = contents.substring(contents.indexOf("bitcoin:") + 8, contents.indexOf("?amount="));
                 this.amountText.setText(contents.substring(contents.indexOf("?amount=") + 8, contents.indexOf("&label=")));
                 
                 onResume();

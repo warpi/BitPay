@@ -3,30 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
-    <TableLayout android:id="@+id/tableLayout1" android:layout_width="fill_parent" android:layout_height="70dip">
-        <LinearLayout android:id="@+id/linearLayout" android:layout_width="50dip" android:layout_height="70dip">
-            <TableLayout android:layout_height="fill_parent" android:layout_width="220dip" android:id="@+id/account_layout4">
-            	<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/account_name_layout4">
-                    <TextView android:id="@+id/account_text4" android:layout_height="wrap_content" android:text="Account: " android:layout_width="wrap_content"></TextView>
-                    <TextView android:id="@+id/account_name4" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
-                </LinearLayout>
-                <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/account_address4"></TextView>
-            </TableLayout>
-            <TableLayout android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/balance_layout4">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Balance:" android:id="@+id/balance_text4"></TextView>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/balance4" android:text="0 BTC"></TextView>
-            </TableLayout>
-        </LinearLayout>
-    </TableLayout>
-    <LinearLayout android:id="@+id/linearLayout2" android:layout_width="wrap_content" android:layout_height="wrap_content">
-        <Spinner android:id="@+id/account_spinner" android:layout_height="wrap_content" android:layout_width="220dip"></Spinner>
-    </LinearLayout>
-    <LinearLayout android:id="@+id/linearLayout3" android:layout_width="wrap_content" android:layout_height="wrap_content">
-        <Button android:text="Add Account" android:layout_height="wrap_content" android:id="@+id/button1" android:layout_width="fill_parent"></Button>
-    </LinearLayout>
-    <LinearLayout android:id="@+id/linearLayout4" android:layout_width="wrap_content" android:layout_height="wrap_content">
-        <Button android:text="Remove Account" android:layout_height="wrap_content" android:id="@+id/button2" android:layout_width="fill_parent"></Button>
-    </LinearLayout>
+
 
 </TableLayout>
 
