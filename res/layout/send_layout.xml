@@ -3,23 +3,23 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
-    <TableLayout android:id="@+id/tableLayout1" android:layout_width="fill_parent" android:layout_height="70dip">
-        <LinearLayout android:id="@+id/linearLayout1" android:layout_width="50dip" android:layout_height="70dip">
-            <TableLayout android:layout_height="fill_parent" android:layout_width="220dip" android:id="@+id/account_layout1">
-                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/account_name_layout1">
-                    <TextView android:id="@+id/account_text1" android:layout_height="wrap_content" android:text="Account: " android:layout_width="wrap_content"></TextView>
-                    <TextView android:id="@+id/account_name1" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
-                </LinearLayout>
-                <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/account_address1"></TextView>
-            </TableLayout>
-            <TableLayout android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/balance_layout1">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Balance:" android:id="@+id/balance_text1"></TextView>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/balance1" android:text="0 BTC"></TextView>
-            </TableLayout>
-        </LinearLayout>
-    </TableLayout>
+  
+  <LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <TextView android:id="@+id/account_text1" android:layout_height="wrap_content" android:text="Account: " android:layout_width="wrap_content"></TextView>
+    <TextView android:id="@+id/account_name1" android:layout_height="wrap_content" android:text=" " android:layout_width="wrap_content"></TextView>
+</LinearLayout>
+
+<LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Balance: " android:id="@+id/balance_text1"></TextView>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/balance1" android:text="0 BTC"></TextView>
+</LinearLayout>
+
+    <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/account_address1"></TextView>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/text12" android:text=" "></TextView>
+
     <TableLayout android:id="@+id/tableLayout2" android:layout_width="fill_parent" android:layout_height="50dip">
         <TableLayout android:layout_height="fill_parent" android:layout_width="220dip" android:id="@+id/receive_account_layout">
+
             <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/receive_account_text" android:text="Receiver Account:"></TextView>
             <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/receive_account"></TextView>
         </TableLayout>

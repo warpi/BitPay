@@ -82,23 +82,28 @@ public class SendActivity extends Activity implements OnClickListener {
 			Log.v(TAG, "onClick: Send, send "
 					+ this.amountText.getText().toString() + " to "
 					+ BitPayObj.getBitPayObj().getReceiverAccount());
-		
-			Toast.makeText(SendActivity.this, BitPay.send_pkey, Toast.LENGTH_LONG).show();
-			Toast.makeText(SendActivity.this, this.amountText.getText().toString(), Toast.LENGTH_LONG).show();
-
-			//BitPay.send_pkey = "13KzwhsJDYuo4xQv3G6CTyRjkagMp7dnrm";
 			
-			// Sending money and update balance
-    		myString = (String) BitPay.downloadHttpsUrl("https://www.instawallet.org/w/"+BitPay.account_url,"address="+BitPay.send_pkey+"&amount="+this.amountText.getText().toString());
-    		//myString = (String) BitPay.downloadHttpsUrl("https://www.instawallet.org/w/"+BitPay.account_url,"");
+			try{
 			
-			// Balance in BTC
-			pattern = Pattern.compile("<span id=\"balance\">(.+?)</span>");
-    		matcher = pattern.matcher(myString);
-    		matcher.find();
-    		BitPay.account_balance = (String) matcher.group(1); // Access a submatch group
-    		balanceTextView.setText(BitPay.account_balance + " BTC");
-
+				// Sending money and update balance
+	    		myString = (String) BitPay.downloadHttpsUrl("https://www.instawallet.org/w/"+BitPay.account_url,"address="+BitPay.send_pkey+"&amount="+this.amountText.getText().toString());
+				
+				// Balance in BTC
+				Pattern pattern = Pattern.compile("<span id=\"balance\">(.+?)</span>");
+	    		Matcher matcher = pattern.matcher(myString);
+	    		matcher.find();
+	    		BitPay.account_balance = (String) matcher.group(1); // Access a submatch group
+	    		
+	    		balanceTextView.setText(BitPay.account_balance + " BTC");
+	    		Toast.makeText(SendActivity.this, "Bitcoins sent", Toast.LENGTH_LONG).show();
+				Toast.makeText(SendActivity.this, "Balance updated", Toast.LENGTH_LONG).show();
+    		
+			} catch(Exception e) {
+				
+				Toast.makeText(SendActivity.this, "Connection lost", Toast.LENGTH_LONG).show();
+				
+			}
+			
 		}
 	}
 	
@@ -119,7 +124,6 @@ public class SendActivity extends Activity implements OnClickListener {
                 this.amountText.setText(contents.substring(contents.indexOf("?amount=") + 8, contents.indexOf("&label=")));
                 
                 onResume();
-                //ConfirmPay.callMe(this, bitcoinUri);
                 
                 
             }
@@ -132,7 +136,7 @@ public class SendActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
-		//accountAddressTextView.setText(BitPayObj.getBitPayObj().getAccount().getAccounAddress());
+
 	}
 
 	private static final String TAG = "send_tab";
