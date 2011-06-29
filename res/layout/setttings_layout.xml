@@ -13,6 +13,7 @@
 <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/textView27" android:text=" " android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center"></TextView>
 <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/textView28" android:text="bitpay@warpi.net" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center"></TextView>
 <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/textView29" android:text="github.com/warpi/BitPay" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center"></TextView>
+<TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/textView6" android:text="#BitPay @ freenode" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center"></TextView>
 <TextView android:text=" " android:id="@+id/textView5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center"></TextView>
 
 </TableLayout>
