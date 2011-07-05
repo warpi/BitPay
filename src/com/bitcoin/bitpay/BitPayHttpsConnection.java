@@ -13,8 +13,7 @@ public class BitPayHttpsConnection {
 	public BitPayHttpsConnection() {
 
 		// TODO create a new instawallet account
-		this.accountURL = "https://www.instawallet.org/w/s8h_vuRAfsaJQdzs-zn0yA";
-
+	
 	}
 
 	public BitPayHttpsConnection(String accountURL) {

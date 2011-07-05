@@ -21,10 +21,6 @@ public class BitPayObj implements Runnable {
 		//TODO open sql to get userdata, accountURL....
 		//TODO open https connection to get balance and accountNumber.....
 		
-		//FIXME
-		this.accountVector.add(new BitPayAccount("My Account_1", "174MgqAd2NqnwAcpajCQBo3AhwaEQDCUT1", "https://www.instawallet.org/w/9ODM4oWAiq9oXE4Ji6qTsg"));
-		this.account = this.accountVector.get(0);	
-
 		new Thread(this).start();
 	}
 
