@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SendActivity extends Activity implements OnClickListener {
-	private TextView accountNameTextView;
+
 	private TextView accountAddressTextView;
 	private TextView balanceTextView;
 	private EditText amountText;
@@ -31,13 +31,9 @@ public class SendActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.send_layout);
 
-		
-		accountNameTextView = (TextView) findViewById(R.id.account_name1);
-		accountNameTextView.setText("InstaWallet.org");
-
 		accountAddressTextView = (TextView) findViewById(R.id.account_address1);
 		accountAddressTextView.setText(BitPay.account_pkey);
-
+		
 		balanceTextView = (TextView) findViewById(R.id.balance1);
 		balanceTextView.setText(BitPay.account_balance + " BTC");
 
@@ -85,13 +81,13 @@ public class SendActivity extends Activity implements OnClickListener {
 			try{
 			
 				// Sending money and update balance
-	    		myString = (String) BitPay.downloadHttpsUrl("https://www.instawallet.org/w/"+BitPay.account_url,"address="+BitPay.send_pkey+"&amount="+this.amountText.getText().toString());
-				
+	    		myString = (String) BitPay.downloadHttpsUrl("https://www.instawallet.org/api/v1/w/"+BitPay.account_url+"/payment","address="+BitPay.send_pkey+"&amount="+String.valueOf(Long.valueOf(this.amountText.getText().toString())*100000000));
+	    		
 				// Balance in BTC
-				Pattern pattern = Pattern.compile("<span id=\"balance\">(.+?)</span>");
+				Pattern pattern = Pattern.compile("balance\": (.+?)\\}");
 	    		Matcher matcher = pattern.matcher(myString);
 	    		matcher.find();
-	    		BitPay.account_balance = (String) matcher.group(1); // Access a submatch group
+	    		BitPay.account_balance = String.valueOf(Double.valueOf(matcher.group(1).toString())/100000000); // Access a submatch group
 	    		
 	    		balanceTextView.setText(BitPay.account_balance + " BTC");
 	    		Toast.makeText(SendActivity.this, "Bitcoins sent", Toast.LENGTH_LONG).show();
@@ -118,9 +114,19 @@ public class SendActivity extends Activity implements OnClickListener {
                 Uri bitcoinUri = Uri.parse(contents);
                 
                 Log.v(TAG, "onActivityResult: Content: " + contents + " format: " + format + " Uri: " + bitcoinUri.toString());
+
+				Pattern pattern = Pattern.compile("1[a-km-zA-HJ-NP-Z1-9]{24,33}");
+				Matcher matcher = pattern.matcher(contents);
+				matcher.find();
+				BitPay.send_pkey = (String) matcher.group(0); // Get bitcoin address
+
+				try {
+				
+					this.amountText.setText(contents.substring(contents.indexOf("?amount=") + 8, contents.indexOf("&label=")));
                 
-                BitPay.send_pkey = contents.substring(contents.indexOf("bitcoin:") + 8, contents.indexOf("?amount="));
-                this.amountText.setText(contents.substring(contents.indexOf("?amount=") + 8, contents.indexOf("&label=")));
+				} catch(Exception e) {
+					
+				}
                 
                 onResume();
                 

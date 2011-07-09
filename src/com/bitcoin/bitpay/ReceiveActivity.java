@@ -24,7 +24,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 public class ReceiveActivity extends Activity implements TextWatcher {
 
 	
-	private TextView accountNameTextView;
 	private TextView accountAddressTextView;
 	
 	private TextView balanceTextView;
@@ -37,9 +36,6 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.receive_layout);
-
-		accountNameTextView = (TextView) findViewById(R.id.account_name2);
-		accountNameTextView.setText("InstaWallet.org");
 
 		accountAddressTextView = (TextView) findViewById(R.id.account_address2);
 		accountAddressTextView.setText(BitPay.account_pkey);
@@ -59,6 +55,7 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 	protected void onResume() {
 		super.onResume();
 		Log.v(TAG, "onResume");
+		
 		balanceTextView.setText(BitPay.account_balance + " BTC");
 
 	}

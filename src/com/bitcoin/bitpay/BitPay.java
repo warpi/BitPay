@@ -31,7 +31,7 @@ import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
 
 public class BitPay extends TabActivity implements OnTouchListener,
-		OnTabChangeListener {
+	OnTabChangeListener {
 
 	public static String account_url = "";
 	public static String account_pkey = "";
@@ -79,50 +79,54 @@ public class BitPay extends TabActivity implements OnTouchListener,
 			account_pkey = allRows.getString(cindex);
 			
 			Toast.makeText(BitPay.this, "Stored account loaded", Toast.LENGTH_LONG).show();
-			
+
+			// Load balance from internet
 			try {
-			
-				// Load balance from internet
-				String myString = (String) downloadHttpsUrl("https://www.instawallet.org/w/"+account_url, "");
+				
+				String myString = (String) downloadHttpsUrl("https://www.instawallet.org/api/v1/w/"+account_url+"/balance", "");
 				
 				// Balance in BTC
-				Pattern pattern = Pattern.compile("<span id=\"balance\">(.+?)</span>");
+				Pattern pattern = Pattern.compile("balance\": (.+?)\\}");
 	    		Matcher matcher = pattern.matcher(myString);
 	    		matcher.find();
-	    		account_balance = (String) matcher.group(1); // Access a submatch group
+	    		account_balance = String.valueOf(Double.valueOf(matcher.group(1).toString())/100000000); // Access a submatch group
 	    		
 	    		Toast.makeText(BitPay.this, "Balance updated", Toast.LENGTH_LONG).show();
-    		
-			} catch(Exception f) {
+
+			} catch(Exception e) {
 				
 				Toast.makeText(BitPay.this, "Connection lost", Toast.LENGTH_LONG).show();
 				
 			}
-			
+
     	} catch(Exception e) {
 			
     		try {
 				
-        		String myString = (String) downloadHttpsUrl("https://www.instawallet.org/", "");
-        		
+    			String myString = (String) downloadHttpsUrl("https://www.instawallet.org/api/v1/new_wallet", "");
+    			
         		// Get url
-        		Pattern pattern = Pattern.compile("BALANCE_URL = \"/b/(.+?)\"");
+        		Pattern pattern = Pattern.compile("wallet_id\": \"(.+?)\"\\}");
         		Matcher matcher = pattern.matcher(myString);
         		matcher.find();
         		account_url = (String) matcher.group(1); // Access a submatch group
         		
+        		myString = (String) downloadHttpsUrl("https://www.instawallet.org/api/v1/w/"+account_url+"/address", "");
+        		
         		// Get Public key
-    			pattern = Pattern.compile("<div id=\"addr\">(.+?)</div>");
-        		matcher = pattern.matcher(myString);
+    			pattern = Pattern.compile("address\": \"(.+?)\"\\}");
+    			matcher = pattern.matcher(myString);
         		matcher.find();
         		account_pkey = (String) matcher.group(1); // Access a submatch group
         		
-    			// Balance in BTC
-    			pattern = Pattern.compile("<span id=\"balance\">(.+?)</span>");
-        		matcher = pattern.matcher(myString);
-        		matcher.find();
-        		account_balance = (String) matcher.group(1); // Access a submatch group
-        		
+        		myString = (String) downloadHttpsUrl("https://www.instawallet.org/api/v1/w/"+account_url+"/balance", "");
+				
+				// Balance in BTC
+				pattern = Pattern.compile("balance\": (.+?)\\}");
+	    		matcher = pattern.matcher(myString);
+	    		matcher.find();
+	    		account_balance = String.valueOf(Double.valueOf(matcher.group(1).toString())/100000000); // Access a submatch group
+	    		
         		myDB.execSQL("insert into bitpay (url,pkey) values ('"+account_url+"','"+account_pkey+"');");
         		
         		Toast.makeText(BitPay.this, "New account created", Toast.LENGTH_LONG).show();
@@ -187,19 +191,25 @@ public class BitPay extends TabActivity implements OnTouchListener,
 		// TODO Auto-generated method stub
 		Log.v(TAG, "tabId: " + tabId);
 
+		if (tabId.equals("TAB_2_TAG")) {
+		
+
+		}
+			
 		if (tabId.equals("TAB_4_TAG")) {
 			
 			// Load balance from internet
 			try {
-				String myString = (String) downloadHttpsUrl("https://www.instawallet.org/w/"+account_url, "");
-
+				
+				String myString = (String) downloadHttpsUrl("https://www.instawallet.org/api/v1/w/"+account_url+"/balance", "");
+				
 				// Balance in BTC
-				Pattern pattern = Pattern.compile("<span id=\"balance\">(.+?)</span>");
+				Pattern pattern = Pattern.compile("balance\": (.+?)\\}");
 	    		Matcher matcher = pattern.matcher(myString);
 	    		matcher.find();
-	    		account_balance = (String) matcher.group(1); // Access a submatch group
-				
-				Toast.makeText(BitPay.this, "Balance updated", Toast.LENGTH_LONG).show();
+	    		account_balance = String.valueOf(Double.valueOf(matcher.group(1).toString())/100000000); // Access a submatch group
+	    		
+	    		Toast.makeText(BitPay.this, "Balance updated", Toast.LENGTH_LONG).show();
 
 			} catch(Exception e) {
 				
