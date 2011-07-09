@@ -26,7 +26,6 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 	
 	private TextView accountAddressTextView;
 	
-	private TextView balanceTextView;
 	private QRCodeWriter qrCodeWriter = new QRCodeWriter();
 	private EditText receiveAmountText;
 
@@ -39,9 +38,6 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 
 		accountAddressTextView = (TextView) findViewById(R.id.account_address2);
 		accountAddressTextView.setText(BitPay.account_pkey);
-
-		balanceTextView = (TextView) findViewById(R.id.balance2);
-		balanceTextView.setText(BitPay.account_balance + " BTC");
 		
 		receiveAmountText = (EditText) findViewById(R.id.receive_amount);
 		receiveAmountText.addTextChangedListener(this);
@@ -56,7 +52,7 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 		super.onResume();
 		Log.v(TAG, "onResume");
 		
-		balanceTextView.setText(BitPay.account_balance + " BTC");
+	//	balanceTextView.setText(BitPay.account_balance + " BTC");
 
 	}
 

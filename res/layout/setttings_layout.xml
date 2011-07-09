@@ -2,11 +2,9 @@
 <TableLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
-  
-    <TextView android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/textView1" android:text=" " android:layout_height="wrap_content"></TextView>
-    <TextView android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/textView2" android:text="BitPay version 0.1" android:layout_height="wrap_content" android:gravity="center"></TextView>
-    <TextView android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/textView3" android:text="(2011-06-29)" android:layout_height="wrap_content" android:gravity="center"></TextView>
+  android:layout_height="fill_parent"
+  >
+    <TextView android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/textView2" android:text="BitPay" android:layout_height="wrap_content" android:gravity="center"></TextView>
     <TextView android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/textView4" android:text=" " android:layout_height="wrap_content"></TextView>
 <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/textView25" android:text="warpi, founder and developer" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center"></TextView>
 <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/textView26" android:text="leifi, founder and developer" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center"></TextView>
