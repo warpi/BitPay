@@ -61,7 +61,6 @@ public class BitPayObj implements Runnable {
 		return bitPayObj;
 	}
 
-	@Override
 	public void run() {
 		
 		while(true)	{

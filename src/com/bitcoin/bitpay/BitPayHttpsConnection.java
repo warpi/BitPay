@@ -3,7 +3,7 @@ package com.bitcoin.bitpay;
 
 public class BitPayHttpsConnection {
 	
-	private String accountURL;
+	//private String accountURL;
 	
 	private String acountNumber;	//Bitcoin address
 	private String acountBalance;	
@@ -17,7 +17,7 @@ public class BitPayHttpsConnection {
 	}
 
 	public BitPayHttpsConnection(String accountURL) {
-		this.accountURL = accountURL;
+		//this.accountURL = accountURL;
 	}
 	
 	

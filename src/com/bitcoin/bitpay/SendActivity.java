@@ -64,7 +64,6 @@ public class SendActivity extends Activity implements OnClickListener {
 
 	}
 
-	@Override
 	public void onClick(View arg0) {
 		if (R.id.from_camera_button == arg0.getId()) {
 			Log.v(TAG, "onClick: from camera button");

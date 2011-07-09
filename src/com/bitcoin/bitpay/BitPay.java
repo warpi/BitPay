@@ -38,10 +38,6 @@ public class BitPay extends TabActivity implements OnTouchListener,
 	public static String account_balance = "";
 	public static String send_pkey = "";
 	
-	private static String TAB_1_TAG = "send";
-	private static String TAB_2_TAG = "receive";
-	private static String TAB_4_TAG = "Credits";
-	
 	private TabHost tabHost;
 
 	String myText;
@@ -181,14 +177,12 @@ public class BitPay extends TabActivity implements OnTouchListener,
 	
 	}
 
-	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
 
 		return false;
 	}
 
-	@Override
 	public void onTabChanged(String tabId) {
 		// TODO Auto-generated method stub
 		Log.v(TAG, "tabId: " + tabId);
