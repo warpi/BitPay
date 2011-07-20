@@ -8,12 +8,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.net.Uri.Builder;
 import android.os.Bundle;
+import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -21,7 +25,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
-public class ReceiveActivity extends Activity implements TextWatcher {
+public class ReceiveActivity extends Activity implements TextWatcher, OnClickListener {
 
 	
 	private TextView accountAddressTextView;
@@ -38,6 +42,8 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 
 		accountAddressTextView = (TextView) findViewById(R.id.account_address2);
 		accountAddressTextView.setText(BitPay.account_pkey);
+		accountAddressTextView.setOnClickListener(this);
+
 		
 		receiveAmountText = (EditText) findViewById(R.id.receive_amount);
 		receiveAmountText.addTextChangedListener(this);
@@ -126,6 +132,16 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void onClick(View arg0) {
+		if (R.id.account_address2 == arg0.getId()) {
+			ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+			clipboard.setText(accountAddressTextView.getText());
+			Toast.makeText(ReceiveActivity.this, "Your bitcoin address is copied to clipboard.",
+					Toast.LENGTH_LONG).show();
+		}
 	}
 
 }

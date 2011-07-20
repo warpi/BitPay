@@ -3,10 +3,14 @@ package com.bitcoin.bitpay;
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.ClipboardManager;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends Activity implements OnClickListener {
 
 	private TextView textView5;
 	private TextView textView2;
@@ -19,6 +23,7 @@ public class SettingsActivity extends Activity {
 
 		textView5 = (TextView) findViewById(R.id.textView5);
 		textView5.setText("instawallet.org/w/" + BitPay.account_url);
+		textView5.setOnClickListener(this);
 
 		try
 		{
@@ -43,5 +48,15 @@ public class SettingsActivity extends Activity {
 	}
 
 	private static final String TAG = "settings_tab";
+
+	@Override
+	public void onClick(View arg0) {
+		if (R.id.textView5 == arg0.getId()) {
+			ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+			clipboard.setText(textView5.getText());
+			Toast.makeText(SettingsActivity.this, "Your instawallet address is copied to clipboard.",
+					Toast.LENGTH_LONG).show();
+		}
+	}
 
 }
