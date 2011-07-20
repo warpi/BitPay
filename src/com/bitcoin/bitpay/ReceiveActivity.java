@@ -24,10 +24,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 public class ReceiveActivity extends Activity implements TextWatcher {
 
 	
-	private TextView accountNameTextView;
 	private TextView accountAddressTextView;
 	
-	private TextView balanceTextView;
 	private QRCodeWriter qrCodeWriter = new QRCodeWriter();
 	private EditText receiveAmountText;
 
@@ -38,14 +36,8 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.receive_layout);
 
-		accountNameTextView = (TextView) findViewById(R.id.account_name2);
-		accountNameTextView.setText("InstaWallet.org");
-
 		accountAddressTextView = (TextView) findViewById(R.id.account_address2);
 		accountAddressTextView.setText(BitPay.account_pkey);
-
-		balanceTextView = (TextView) findViewById(R.id.balance2);
-		balanceTextView.setText(BitPay.account_balance + " BTC");
 		
 		receiveAmountText = (EditText) findViewById(R.id.receive_amount);
 		receiveAmountText.addTextChangedListener(this);
@@ -59,7 +51,8 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 	protected void onResume() {
 		super.onResume();
 		Log.v(TAG, "onResume");
-		balanceTextView.setText(BitPay.account_balance + " BTC");
+		
+	//	balanceTextView.setText(BitPay.account_balance + " BTC");
 
 	}
 
@@ -113,7 +106,6 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 
 	private static final String TAG = "receive_tab";
 
-	@Override
 	public void afterTextChanged(Editable s) {
 		try	{
 			Double recAmount = Double.parseDouble("" + receiveAmountText.getText());
@@ -125,14 +117,12 @@ public class ReceiveActivity extends Activity implements TextWatcher {
 		
 	}
 
-	@Override
 	public void beforeTextChanged(CharSequence s, int start, int count,
 			int after) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		// TODO Auto-generated method stub
 		

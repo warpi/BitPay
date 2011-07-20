@@ -2,26 +2,24 @@
 <TableLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
-  
-  <LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
-    <TextView android:id="@+id/account_text1" android:layout_height="wrap_content" android:text="Account: " android:layout_width="wrap_content"></TextView>
-    <TextView android:id="@+id/account_name1" android:layout_height="wrap_content" android:text=" " android:layout_width="wrap_content"></TextView>
-</LinearLayout>
+  android:layout_height="fill_parent"
+  >
 
+
+    <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/account_address1"></TextView>
 <LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Balance: " android:id="@+id/balance_text1"></TextView>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/balance1" android:text="0 BTC"></TextView>
 </LinearLayout>
 
-    <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/account_address1"></TextView>
+
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/text12" android:text=" "></TextView>
 
     <TableLayout android:id="@+id/tableLayout2" android:layout_width="fill_parent" android:layout_height="50dip">
         <TableLayout android:layout_height="fill_parent" android:layout_width="220dip" android:id="@+id/receive_account_layout">
 
             <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/receive_account_text" android:text="Receiver Account:"></TextView>
-            <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/receive_account"></TextView>
+            <EditText android:inputType="textFilter"  android:singleLine="True" android:textSize="14dp" android:layout_height="33dp" android:layout_width="wrap_content" android:id="@+id/receive_account" android:text=" "></EditText>
         </TableLayout>
     </TableLayout>
     <TableLayout android:id="@+id/tableLayout3" android:layout_width="wrap_content" android:layout_height="wrap_content">
@@ -30,8 +28,8 @@
     <TableLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/tableLayout4">
         <LinearLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/linearLayout2">
             <TextView android:layout_height="wrap_content" android:id="@+id/send_amount_text" android:text="Amount:" android:layout_width="70dip"></TextView>
-            <EditText android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="0.00" android:id="@+id/input_amount"></EditText>
-            <Button android:layout_height="wrap_content" android:text="Send" android:layout_width="wrap_content" android:id="@+id/send_button"></Button>
+            <EditText  android:singleLine="True" android:inputType="numberDecimal" android:layout_width="100dp" android:textSize="14dp" android:layout_height="33dp" android:text="0.00" android:id="@+id/input_amount"></EditText>
+			<Button android:layout_height="wrap_content" android:text="Send" android:layout_width="wrap_content" android:id="@+id/send_button"></Button>
         </LinearLayout>
     </TableLayout>
 
