@@ -31,117 +31,134 @@ import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
 
 public class BitPay extends TabActivity implements OnTouchListener,
-	OnTabChangeListener {
+		OnTabChangeListener {
 
 	public static String account_url = "";
 	public static String account_pkey = "";
 	public static String account_balance = "";
 	public static String send_pkey = "";
-	
+
 	private TabHost tabHost;
 
 	String myText;
-	
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-    	
+
 		// FIX INSTAWALLET ACCOUNT
-		
+
 		SQLiteDatabase myDB;
 		myDB = openOrCreateDatabase("bitpay", Context.MODE_PRIVATE, null);
-/*
+		/*
+		 * try { myDB.execSQL("drop table bitpay;"); } catch (SQLException e) {
+		 * }
+		 */
 		try {
-			myDB.execSQL("drop table bitpay;");
-    	} catch (SQLException e) {
-    	}
-*/
-    	try {
-    		
-    		myDB.execSQL("create table bitpay (_id integer primary key autoincrement, url text not null, pkey text not null);");
 
-    	} catch (SQLException e) {
-    		
-    		// the table is not possible to create
-    		
-    	}
-    	    		
-    	try {
-    			
-    		// READ FROM DATABASE
+			myDB.execSQL("create table bitpay (_id integer primary key autoincrement, url text not null, pkey text not null);");
+
+		} catch (SQLException e) {
+
+			// the table is not possible to create
+
+		}
+
+		try {
+
+			// READ FROM DATABASE
 			Cursor allRows = myDB.rawQuery("select * from bitpay;", null);
 			Integer cindex = allRows.getColumnIndex("url");
 			allRows.moveToFirst();
 			account_url = allRows.getString(cindex);
-			
+
 			cindex = allRows.getColumnIndex("pkey");
 			allRows.moveToFirst();
 			account_pkey = allRows.getString(cindex);
-			
-			Toast.makeText(BitPay.this, "Stored account loaded", Toast.LENGTH_LONG).show();
+
+			Toast.makeText(BitPay.this, "Stored account loaded",
+					Toast.LENGTH_LONG).show();
 
 			// Load balance from internet
 			try {
-				
-				String myString = (String) downloadHttpsUrl("https://www.instawallet.org/api/v1/w/"+account_url+"/balance", "");
-				
+
+				String myString = (String) downloadHttpsUrl(
+						"https://www.instawallet.org/api/v1/w/" + account_url
+								+ "/balance", "");
+
 				// Balance in BTC
 				Pattern pattern = Pattern.compile("balance\": (.+?)\\}");
-	    		Matcher matcher = pattern.matcher(myString);
-	    		matcher.find();
-	    		account_balance = String.valueOf(Double.valueOf(matcher.group(1).toString())/100000000); // Access a submatch group
-	    		
-	    		Toast.makeText(BitPay.this, "Balance updated", Toast.LENGTH_LONG).show();
+				Matcher matcher = pattern.matcher(myString);
+				matcher.find();
+				account_balance = String.valueOf(Double.valueOf(matcher
+						.group(1).toString()) / 100000000); // Access a submatch
+															// group
 
-			} catch(Exception e) {
-				
-				Toast.makeText(BitPay.this, "Connection lost", Toast.LENGTH_LONG).show();
-				
+				Toast.makeText(BitPay.this, "Balance updated",
+						Toast.LENGTH_LONG).show();
+
+			} catch (Exception e) {
+
+				Toast.makeText(BitPay.this, "Connection lost",
+						Toast.LENGTH_LONG).show();
+
 			}
 
-    	} catch(Exception e) {
-			
-    		try {
-				
-    			String myString = (String) downloadHttpsUrl("https://www.instawallet.org/api/v1/new_wallet", "");
-    			
-        		// Get url
-        		Pattern pattern = Pattern.compile("wallet_id\": \"(.+?)\"\\}");
-        		Matcher matcher = pattern.matcher(myString);
-        		matcher.find();
-        		account_url = (String) matcher.group(1); // Access a submatch group
-        		
-        		myString = (String) downloadHttpsUrl("https://www.instawallet.org/api/v1/w/"+account_url+"/address", "");
-        		
-        		// Get Public key
-    			pattern = Pattern.compile("address\": \"(.+?)\"\\}");
-    			matcher = pattern.matcher(myString);
-        		matcher.find();
-        		account_pkey = (String) matcher.group(1); // Access a submatch group
-        		
-        		myString = (String) downloadHttpsUrl("https://www.instawallet.org/api/v1/w/"+account_url+"/balance", "");
-				
+		} catch (Exception e) {
+
+			try {
+
+				String myString = (String) downloadHttpsUrl(
+						"https://www.instawallet.org/api/v1/new_wallet", "");
+
+				// Get url
+				Pattern pattern = Pattern.compile("wallet_id\": \"(.+?)\"\\}");
+				Matcher matcher = pattern.matcher(myString);
+				matcher.find();
+				account_url = (String) matcher.group(1); // Access a submatch
+															// group
+
+				myString = (String) downloadHttpsUrl(
+						"https://www.instawallet.org/api/v1/w/" + account_url
+								+ "/address", "");
+
+				// Get Public key
+				pattern = Pattern.compile("address\": \"(.+?)\"\\}");
+				matcher = pattern.matcher(myString);
+				matcher.find();
+				account_pkey = (String) matcher.group(1); // Access a submatch
+															// group
+
+				myString = (String) downloadHttpsUrl(
+						"https://www.instawallet.org/api/v1/w/" + account_url
+								+ "/balance", "");
+
 				// Balance in BTC
 				pattern = Pattern.compile("balance\": (.+?)\\}");
-	    		matcher = pattern.matcher(myString);
-	    		matcher.find();
-	    		account_balance = String.valueOf(Double.valueOf(matcher.group(1).toString())/100000000); // Access a submatch group
-	    		
-        		myDB.execSQL("insert into bitpay (url,pkey) values ('"+account_url+"','"+account_pkey+"');");
-        		
-        		Toast.makeText(BitPay.this, "New account created", Toast.LENGTH_LONG).show();
-        		
-    			} catch(Exception g) {
-    				
-    				Toast.makeText(BitPay.this, "Connection lost", Toast.LENGTH_LONG).show();
-    				finish();
-    				
-    			}
-    		
-    	}
-    	
-    	myDB.close();
-    			
+				matcher = pattern.matcher(myString);
+				matcher.find();
+				account_balance = String.valueOf(Double.valueOf(matcher
+						.group(1).toString()) / 100000000); // Access a submatch
+															// group
+
+				myDB.execSQL("insert into bitpay (url,pkey) values ('"
+						+ account_url + "','" + account_pkey + "');");
+
+				Toast.makeText(BitPay.this, "New account created",
+						Toast.LENGTH_LONG).show();
+
+			} catch (Exception g) {
+
+				Toast.makeText(BitPay.this, "Connection lost",
+						Toast.LENGTH_LONG).show();
+				finish();
+
+			}
+
+		}
+
+		myDB.close();
+
 		Resources res = getResources(); // Resource object to get Drawables
 		tabHost = getTabHost(); // The activity TabHost
 		TabHost.TabSpec spec; // Reusable TabSpec for each tab
@@ -178,7 +195,7 @@ public class BitPay extends TabActivity implements OnTouchListener,
 
 		tabHost.setOnTouchListener(this);
 		tabHost.setOnTabChangedListener(this);
-	
+
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
@@ -187,36 +204,64 @@ public class BitPay extends TabActivity implements OnTouchListener,
 		return false;
 	}
 
+	public boolean updateBalance() {
+		// Load balance from internet
+		try {
+
+			String myString = (String) downloadHttpsUrl(
+					"https://www.instawallet.org/api/v1/w/" + account_url
+							+ "/balance", "");
+
+			// Balance in BTC
+			Pattern pattern = Pattern.compile("balance\": (.+?)\\}");
+			Matcher matcher = pattern.matcher(myString);
+			matcher.find();
+			account_balance = String.valueOf(Double.valueOf(matcher.group(1)
+					.toString()) / 100000000); // Access a submatch group
+
+			return true;
+		} catch (Exception e) {
+
+			return false;
+		}
+
+	}
+
 	public void onTabChanged(String tabId) {
 		// TODO Auto-generated method stub
 		Log.v(TAG, "tabId: " + tabId);
 
 		if (tabId.equals("TAB_2_TAG")) {
-		
 
 		}
-			
+
 		if (tabId.equals("TAB_4_TAG")) {
-			
+
 			// Load balance from internet
 			try {
-				
-				String myString = (String) downloadHttpsUrl("https://www.instawallet.org/api/v1/w/"+account_url+"/balance", "");
-				
+
+				String myString = (String) downloadHttpsUrl(
+						"https://www.instawallet.org/api/v1/w/" + account_url
+								+ "/balance", "");
+
 				// Balance in BTC
 				Pattern pattern = Pattern.compile("balance\": (.+?)\\}");
-	    		Matcher matcher = pattern.matcher(myString);
-	    		matcher.find();
-	    		account_balance = String.valueOf(Double.valueOf(matcher.group(1).toString())/100000000); // Access a submatch group
-	    		
-	    		Toast.makeText(BitPay.this, "Balance updated", Toast.LENGTH_LONG).show();
+				Matcher matcher = pattern.matcher(myString);
+				matcher.find();
+				account_balance = String.valueOf(Double.valueOf(matcher
+						.group(1).toString()) / 100000000); // Access a submatch
+															// group
 
-			} catch(Exception e) {
-				
-				Toast.makeText(BitPay.this, "Connection lost", Toast.LENGTH_LONG).show();
-				
+				Toast.makeText(BitPay.this, "Balance updated",
+						Toast.LENGTH_LONG).show();
+
+			} catch (Exception e) {
+
+				Toast.makeText(BitPay.this, "Connection lost",
+						Toast.LENGTH_LONG).show();
+
 			}
-			
+
 		}
 
 	}
@@ -224,33 +269,32 @@ public class BitPay extends TabActivity implements OnTouchListener,
 	private static final String TAG = "bitpay.java";
 
 	public static String downloadHttpsUrl(String url1, String post1) {
+		// Create a trust manager that does not validate certificate chains
+		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
 
-    	// Create a trust manager that does not validate certificate chains
-    	TrustManager[] trustAllCerts = new TrustManager[]{
-    	    new X509TrustManager() {
-    	        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-    	            return null;
-    	        }
-    	        public void checkClientTrusted(
-    	            java.security.cert.X509Certificate[] certs, String authType) {
-    	        }
-    	        public void checkServerTrusted(
-    	            java.security.cert.X509Certificate[] certs, String authType) {
-    	        }
-    	    }
-    	};
+			public void checkClientTrusted(
+					java.security.cert.X509Certificate[] certs, String authType) {
+			}
 
-    	// Install the all-trusting trust manager
-    	try {
-    	    SSLContext sc = SSLContext.getInstance("TLS");
-    	    sc.init(null, trustAllCerts, new java.security.SecureRandom());
-    	    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-    	} catch (Exception e) {
-    	}
+			public void checkServerTrusted(
+					java.security.cert.X509Certificate[] certs, String authType) {
+			}
+		} };
+		// Install the all-trusting trust manager
+		try {
+			SSLContext sc = SSLContext.getInstance("TLS");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection
+					.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		} catch (Exception e) {
+		}
 
-    	HttpsURLConnection con = null;
+		HttpsURLConnection con = null;
 		URL url;
-		InputStream is=null;
+		InputStream is = null;
 
 		try {
 			url = new URL(url1);
@@ -258,12 +302,13 @@ public class BitPay extends TabActivity implements OnTouchListener,
 			con.setReadTimeout(10000); // milliseconds
 			con.setConnectTimeout(15000); // milliseconds
 
-			if (!post1.equals("")){
+			if (!post1.equals("")) {
 				con.setRequestMethod("POST");
 				con.setDoOutput(true);
-				OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-	            // this is were we're adding post data to the request
-	            wr.write(post1);
+				OutputStreamWriter wr = new OutputStreamWriter(
+						con.getOutputStream());
+				// this is were we're adding post data to the request
+				wr.write(post1);
 				wr.flush();
 				wr.close();
 				is = con.getInputStream();
@@ -274,17 +319,17 @@ public class BitPay extends TabActivity implements OnTouchListener,
 				con.connect();
 				is = con.getInputStream();
 			}
-			
-		}catch (IOException e) {
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		BufferedReader rd = new BufferedReader(new InputStreamReader(is), 4096);
 		String line;
-		StringBuilder sb =  new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		try {
 			while ((line = rd.readLine()) != null) {
-					sb.append(line);
+				sb.append(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -294,8 +339,7 @@ public class BitPay extends TabActivity implements OnTouchListener,
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return sb.toString();
+	}
 
-		return sb.toString();	
-    }
-	
 }

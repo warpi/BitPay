@@ -49,7 +49,7 @@ public class SendActivity extends Activity implements OnClickListener {
 		button2.setOnClickListener(this);
 
 		amountText = (EditText) findViewById(R.id.input_amount);
-
+		
 	}
 
 	@Override
@@ -89,23 +89,17 @@ public class SendActivity extends Activity implements OnClickListener {
 						"address="
 								+ BitPay.send_pkey
 								+ "&amount="
-								+ String.valueOf(Long.valueOf(this.amountText
-										.getText().toString()) * 100000000));
-
-				// Balance in BTC
-				Pattern pattern = Pattern.compile("balance\": (.+?)\\}");
+								+ String.valueOf("" + (long)(Double.parseDouble(this.amountText.getText().toString()) * 100000000)));
+					
+				Pattern pattern = Pattern.compile("successful\": (.+?)\\}");
 				Matcher matcher = pattern.matcher(myString);
 				matcher.find();
-				BitPay.account_balance = String.valueOf(Double.valueOf(matcher
-						.group(1).toString()) / 100000000); // Access a submatch
-															// group
-
-				balanceTextView.setText(BitPay.account_balance + " BTC");
-				Toast.makeText(SendActivity.this, "Bitcoins sent",
-						Toast.LENGTH_LONG).show();
-				Toast.makeText(SendActivity.this, "Balance updated",
-						Toast.LENGTH_LONG).show();
-
+				if(matcher.group(1).toString().startsWith("true"))	{
+					//TODO update balance.
+					Toast.makeText(SendActivity.this, "Bitcoins sent",
+							Toast.LENGTH_LONG).show();
+				}
+												
 			} catch (Exception e) {
 
 				Toast.makeText(SendActivity.this, "Connection lost",

@@ -56,6 +56,8 @@ public class SettingsActivity extends Activity implements OnClickListener {
 			clipboard.setText(textView5.getText());
 			Toast.makeText(SettingsActivity.this, "Your instawallet address is copied to clipboard.",
 					Toast.LENGTH_LONG).show();
+			
+			Log.v(TAG, "" + textView5.getText());
 		}
 	}
 
