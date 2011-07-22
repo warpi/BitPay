@@ -1,19 +1,5 @@
 package com.bitcoin.bitpay;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -33,18 +19,16 @@ import android.widget.TabHost.OnTabChangeListener;
 public class BitPay extends TabActivity implements OnTouchListener,
 		OnTabChangeListener {
 
-	public static String account_url = "";
-	public static String account_pkey = "";
-	public static String account_balance = "";
-	public static String send_pkey = "";
-
 	private TabHost tabHost;
-
-	String myText;
-
+	
+	private BitPayHttpsConnection bitPayHttpsConnection;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		String account_url = "";
+		String account_pkey = "";
 
 		// FIX INSTAWALLET ACCOUNT
 
@@ -68,96 +52,71 @@ public class BitPay extends TabActivity implements OnTouchListener,
 
 			// READ FROM DATABASE
 			Cursor allRows = myDB.rawQuery("select * from bitpay;", null);
-			Integer cindex = allRows.getColumnIndex("url");
-			allRows.moveToFirst();
-			account_url = allRows.getString(cindex);
+			if (allRows.getCount() > 0) {
+				// bitpay db exists.
+				Integer cindex = allRows.getColumnIndex("url");
 
-			cindex = allRows.getColumnIndex("pkey");
-			allRows.moveToFirst();
-			account_pkey = allRows.getString(cindex);
+				allRows.moveToFirst();
+				account_url = allRows.getString(cindex);
 
-			Toast.makeText(BitPay.this, "Stored account loaded",
-					Toast.LENGTH_LONG).show();
+				cindex = allRows.getColumnIndex("pkey");
+				allRows.moveToFirst();
+				account_pkey = allRows.getString(cindex);
 
-			// Load balance from internet
-			try {
-
-				String myString = (String) downloadHttpsUrl(
-						"https://www.instawallet.org/api/v1/w/" + account_url
-								+ "/balance", "");
-
-				// Balance in BTC
-				Pattern pattern = Pattern.compile("balance\": (.+?)\\}");
-				Matcher matcher = pattern.matcher(myString);
-				matcher.find();
-				account_balance = String.valueOf(Double.valueOf(matcher
-						.group(1).toString()) / 100000000); // Access a submatch
-															// group
-
-				Toast.makeText(BitPay.this, "Balance updated",
+				Toast.makeText(BitPay.this, "Stored account loaded",
 						Toast.LENGTH_LONG).show();
 
-			} catch (Exception e) {
+				// create bitPayHttpsConnection object
+				bitPayHttpsConnection = new BitPayHttpsConnection(account_url,
+						account_pkey);
 
-				Toast.makeText(BitPay.this, "Connection lost",
+			} else {
+				try {
+
+					// create bitPayHttpsConnection object and new account
+					bitPayHttpsConnection = new BitPayHttpsConnection();
+
+					myDB.execSQL("insert into bitpay (url,pkey) values ('"
+							+ bitPayHttpsConnection.getAccountURL() + "','"
+							+ bitPayHttpsConnection.getAcountBTCAddress()
+							+ "');");
+
+					Toast.makeText(BitPay.this, "New account created",
+							Toast.LENGTH_LONG).show();
+
+				} catch (Exception g) {
+
+					Toast.makeText(BitPay.this, "Connection lost",
+							Toast.LENGTH_LONG).show();
+					finish();
+
+				}
+
+			}
+
+			// Load balance from Internet
+			while (!bitPayHttpsConnection.updateWalletInfo()) {
+				Toast.makeText(BitPay.this,
+						"Balance update failed, retry in 1 sec.",
 						Toast.LENGTH_LONG).show();
-
+				Thread.sleep(1000);
 			}
 
 		} catch (Exception e) {
 
-			try {
-
-				String myString = (String) downloadHttpsUrl(
-						"https://www.instawallet.org/api/v1/new_wallet", "");
-
-				// Get url
-				Pattern pattern = Pattern.compile("wallet_id\": \"(.+?)\"\\}");
-				Matcher matcher = pattern.matcher(myString);
-				matcher.find();
-				account_url = (String) matcher.group(1); // Access a submatch
-															// group
-
-				myString = (String) downloadHttpsUrl(
-						"https://www.instawallet.org/api/v1/w/" + account_url
-								+ "/address", "");
-
-				// Get Public key
-				pattern = Pattern.compile("address\": \"(.+?)\"\\}");
-				matcher = pattern.matcher(myString);
-				matcher.find();
-				account_pkey = (String) matcher.group(1); // Access a submatch
-															// group
-
-				myString = (String) downloadHttpsUrl(
-						"https://www.instawallet.org/api/v1/w/" + account_url
-								+ "/balance", "");
-
-				// Balance in BTC
-				pattern = Pattern.compile("balance\": (.+?)\\}");
-				matcher = pattern.matcher(myString);
-				matcher.find();
-				account_balance = String.valueOf(Double.valueOf(matcher
-						.group(1).toString()) / 100000000); // Access a submatch
-															// group
-
-				myDB.execSQL("insert into bitpay (url,pkey) values ('"
-						+ account_url + "','" + account_pkey + "');");
-
-				Toast.makeText(BitPay.this, "New account created",
-						Toast.LENGTH_LONG).show();
-
-			} catch (Exception g) {
-
-				Toast.makeText(BitPay.this, "Connection lost",
-						Toast.LENGTH_LONG).show();
-				finish();
-
-			}
+			Toast.makeText(BitPay.this, "Unable to open bitpay db.",
+					Toast.LENGTH_LONG).show();
+			finish();
 
 		}
 
 		myDB.close();
+		
+		//Create the bitPayObj
+		BitPayObj bitBayObj;
+		bitBayObj = BitPayObj.getBitPayObj();
+		bitBayObj.setBitPayHttpsConnection(this.bitPayHttpsConnection);
+		
 
 		Resources res = getResources(); // Resource object to get Drawables
 		tabHost = getTabHost(); // The activity TabHost
@@ -204,29 +163,6 @@ public class BitPay extends TabActivity implements OnTouchListener,
 		return false;
 	}
 
-	public boolean updateBalance() {
-		// Load balance from internet
-		try {
-
-			String myString = (String) downloadHttpsUrl(
-					"https://www.instawallet.org/api/v1/w/" + account_url
-							+ "/balance", "");
-
-			// Balance in BTC
-			Pattern pattern = Pattern.compile("balance\": (.+?)\\}");
-			Matcher matcher = pattern.matcher(myString);
-			matcher.find();
-			account_balance = String.valueOf(Double.valueOf(matcher.group(1)
-					.toString()) / 100000000); // Access a submatch group
-
-			return true;
-		} catch (Exception e) {
-
-			return false;
-		}
-
-	}
-
 	public void onTabChanged(String tabId) {
 		// TODO Auto-generated method stub
 		Log.v(TAG, "tabId: " + tabId);
@@ -237,109 +173,24 @@ public class BitPay extends TabActivity implements OnTouchListener,
 
 		if (tabId.equals("TAB_4_TAG")) {
 
-			// Load balance from internet
-			try {
-
-				String myString = (String) downloadHttpsUrl(
-						"https://www.instawallet.org/api/v1/w/" + account_url
-								+ "/balance", "");
-
-				// Balance in BTC
-				Pattern pattern = Pattern.compile("balance\": (.+?)\\}");
-				Matcher matcher = pattern.matcher(myString);
-				matcher.find();
-				account_balance = String.valueOf(Double.valueOf(matcher
-						.group(1).toString()) / 100000000); // Access a submatch
-															// group
-
-				Toast.makeText(BitPay.this, "Balance updated",
+			// Load balance from Internet
+			while (!bitPayHttpsConnection.updateWalletInfo()) {
+				Toast.makeText(BitPay.this,
+						"Balance update failed, retry in 1 sec.",
 						Toast.LENGTH_LONG).show();
-
-			} catch (Exception e) {
-
-				Toast.makeText(BitPay.this, "Connection lost",
-						Toast.LENGTH_LONG).show();
-
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
+			Toast.makeText(BitPay.this, "Balance updated", Toast.LENGTH_LONG)
+					.show();
 		}
-
 	}
-
+	
 	private static final String TAG = "bitpay.java";
-
-	public static String downloadHttpsUrl(String url1, String post1) {
-		// Create a trust manager that does not validate certificate chains
-		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-				return null;
-			}
-
-			public void checkClientTrusted(
-					java.security.cert.X509Certificate[] certs, String authType) {
-			}
-
-			public void checkServerTrusted(
-					java.security.cert.X509Certificate[] certs, String authType) {
-			}
-		} };
-		// Install the all-trusting trust manager
-		try {
-			SSLContext sc = SSLContext.getInstance("TLS");
-			sc.init(null, trustAllCerts, new java.security.SecureRandom());
-			HttpsURLConnection
-					.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		} catch (Exception e) {
-		}
-
-		HttpsURLConnection con = null;
-		URL url;
-		InputStream is = null;
-
-		try {
-			url = new URL(url1);
-			con = (HttpsURLConnection) url.openConnection();
-			con.setReadTimeout(10000); // milliseconds
-			con.setConnectTimeout(15000); // milliseconds
-
-			if (!post1.equals("")) {
-				con.setRequestMethod("POST");
-				con.setDoOutput(true);
-				OutputStreamWriter wr = new OutputStreamWriter(
-						con.getOutputStream());
-				// this is were we're adding post data to the request
-				wr.write(post1);
-				wr.flush();
-				wr.close();
-				is = con.getInputStream();
-			} else {
-				con.setRequestMethod("GET");
-				con.setDoInput(true);
-				// Start the query
-				con.connect();
-				is = con.getInputStream();
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		BufferedReader rd = new BufferedReader(new InputStreamReader(is), 4096);
-		String line;
-		StringBuilder sb = new StringBuilder();
-		try {
-			while ((line = rd.readLine()) != null) {
-				sb.append(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			rd.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return sb.toString();
-	}
 
 }

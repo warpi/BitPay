@@ -33,14 +33,17 @@ public class SendActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.send_layout);
 
 		accountAddressTextView = (TextView) findViewById(R.id.account_address1);
-		accountAddressTextView.setText(BitPay.account_pkey);
+		accountAddressTextView.setText(BitPayObj.getBitPayObj()
+				.getAcountBTCAddress());
 		accountAddressTextView.setOnClickListener(this);
 
 		balanceTextView = (TextView) findViewById(R.id.balance1);
-		balanceTextView.setText(BitPay.account_balance + " BTC");
+		balanceTextView.setText(BitPayObj.getBitPayObj().getAccountBalance()
+				+ " BTC");
 
 		receiveAccountTextView = (TextView) findViewById(R.id.receive_account);
-		receiveAccountTextView.setText(BitPay.send_pkey);
+		receiveAccountTextView.setText(BitPayObj.getBitPayObj()
+				.getSendAcountBTCAddress());
 
 		Button button1 = (Button) findViewById(R.id.from_camera_button);
 		button1.setOnClickListener(this);
@@ -49,7 +52,8 @@ public class SendActivity extends Activity implements OnClickListener {
 		button2.setOnClickListener(this);
 
 		amountText = (EditText) findViewById(R.id.input_amount);
-		
+
+
 	}
 
 	@Override
@@ -57,8 +61,10 @@ public class SendActivity extends Activity implements OnClickListener {
 		super.onResume();
 		Log.v(TAG, "onResume");
 
-		balanceTextView.setText(BitPay.account_balance + " BTC");
-		receiveAccountTextView.setText(BitPay.send_pkey);
+		balanceTextView.setText(BitPayObj.getBitPayObj().getAccountBalance()
+				+ " BTC");
+		receiveAccountTextView.setText(BitPayObj.getBitPayObj()
+				.getSendAcountBTCAddress());
 
 	}
 
@@ -78,41 +84,52 @@ public class SendActivity extends Activity implements OnClickListener {
 		} else if (R.id.send_button == arg0.getId()) {
 			Log.v(TAG, "onClick: Send, send "
 					+ this.amountText.getText().toString() + " to "
-					+ BitPayObj.getBitPayObj().getReceiverAccount());
+					+ BitPayObj.getBitPayObj().getSendAcountBTCAddress());
 
-			try {
+			// TODO make a confirm dialog, showing the receiver address and
+			// amount.
 
-				// Sending money and update balance
-				myString = (String) BitPay.downloadHttpsUrl(
-						"https://www.instawallet.org/api/v1/w/"
-								+ BitPay.account_url + "/payment",
-						"address="
-								+ BitPay.send_pkey
-								+ "&amount="
-								+ String.valueOf("" + (long)(Double.parseDouble(this.amountText.getText().toString()) * 100000000)));
-					
-				Pattern pattern = Pattern.compile("successful\": (.+?)\\}");
-				Matcher matcher = pattern.matcher(myString);
-				matcher.find();
-				if(matcher.group(1).toString().startsWith("true"))	{
-					//TODO update balance.
-					Toast.makeText(SendActivity.this, "Bitcoins sent",
-							Toast.LENGTH_LONG).show();
-				}
-												
-			} catch (Exception e) {
-
-				Toast.makeText(SendActivity.this, "Connection lost",
+			if (BitPayObj.getBitPayObj().sendBTC(
+					String.valueOf(""
+							+ (long) (Double.parseDouble(this.amountText
+									.getText().toString()) * 100000000)))) {
+				Toast.makeText(SendActivity.this, "Bitcoins sent",
 						Toast.LENGTH_LONG).show();
+
+			} else {
+				Toast.makeText(SendActivity.this,
+						"Error, please check balance.", Toast.LENGTH_LONG)
+						.show();
 
 			}
 
+			// Load balance from Internet
+			while (!BitPayObj.getBitPayObj().updateWalletInfo()) {
+				Toast.makeText(SendActivity.this,
+						"Balance update failed, retry in 1 sec.",
+						Toast.LENGTH_LONG).show();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			Toast.makeText(SendActivity.this,
+					"Balance updated.",
+					Toast.LENGTH_LONG).show();
+			
+			balanceTextView.setText(BitPayObj.getBitPayObj().getAccountBalance()
+					+ " BTC");
+	
+			//TODO redraw
 		}
 
 		else if (R.id.account_address1 == arg0.getId()) {
 			ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 			clipboard.setText(accountAddressTextView.getText());
-			Toast.makeText(SendActivity.this, "Your bitcoin address is copied to clipboard.",
+			Toast.makeText(SendActivity.this,
+					"Your bitcoin address is copied to clipboard.",
 					Toast.LENGTH_LONG).show();
 		}
 
@@ -133,8 +150,10 @@ public class SendActivity extends Activity implements OnClickListener {
 						.compile("1[a-km-zA-HJ-NP-Z1-9]{24,33}");
 				Matcher matcher = pattern.matcher(contents);
 				matcher.find();
-				BitPay.send_pkey = (String) matcher.group(0); // Get bitcoin
-																// address
+
+				BitPayObj.getBitPayObj().setSendAcountBTCAddress(
+						(String) matcher.group(0)); // Get bitcoin
+				// address
 
 				try {
 

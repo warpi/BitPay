@@ -22,7 +22,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.setttings_layout);
 
 		textView5 = (TextView) findViewById(R.id.textView5);
-		textView5.setText("instawallet.org/w/" + BitPay.account_url);
+		textView5.setText("instawallet.org/w/" + BitPayObj.getBitPayObj().getAccountURL());
 		textView5.setOnClickListener(this);
 
 		try
@@ -43,7 +43,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		super.onResume();
 		Log.v(TAG, "onResume");
 
-		textView5.setText("instawallet.org/w/" + BitPay.account_url);
+		textView5.setText("instawallet.org/w/" + BitPayObj.getBitPayObj().getAccountURL());
 
 	}
 

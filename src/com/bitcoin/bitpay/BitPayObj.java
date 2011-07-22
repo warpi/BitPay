@@ -1,58 +1,21 @@
 package com.bitcoin.bitpay;
 
-import java.util.Vector;
-
 import android.util.Log;
 
 public class BitPayObj implements Runnable {
 
-	private BitPayAccount account;
-	private String balance;
-	private String receive_account;
-	String myText;
-	
-	private Vector<BitPayAccount> accountVector;
+	private BitPayHttpsConnection bitPayHttpsConnection;
+
+	private String sendAcountBTCAddress;
 
 	private BitPayObj() {
-		this.balance = "0.00";
-		this.receive_account = "none";
-		accountVector = new Vector<BitPayAccount>();
 		
-		//TODO open sql to get userdata, accountURL....
-		//TODO open https connection to get balance and accountNumber.....
+		this.sendAcountBTCAddress = "";
 		
 		new Thread(this).start();
 	}
 
-	
-	public Vector<BitPayAccount> getAccountVector() {
-		return this.accountVector;
-	}
-	public BitPayAccount getAccount() {
-		return this.account;
-	}
-	public void setAccount(BitPayAccount account) {
-		this.account = account;
-	}
-	public String getReceiverAccount() {
-		return this.receive_account;
-	}
-
-	public void setReceiveAccount(String receive_account) {
-		this.receive_account = receive_account;
-	}
-
-	public String getBalance() {
-		return this.balance;
-	}
-
-	public void setBalance(String balance) {
-		this.balance = balance;
-	}
-
 	private static BitPayObj bitPayObj;
-
-
 	
 	public static BitPayObj getBitPayObj() {
 		if (bitPayObj == null) {
@@ -60,22 +23,51 @@ public class BitPayObj implements Runnable {
 		}
 		return bitPayObj;
 	}
+	
+	public void setBitPayHttpsConnection(BitPayHttpsConnection bitPayHttpsConnection)	{
+		this.bitPayHttpsConnection = bitPayHttpsConnection;
+	}
 
 	public void run() {
 		
 		while(true)	{
-			Log.v(TAG, "BitPayObj update thread running");
-			
-			//TODO update accounts....
+			Log.v(TAG, "BitPayObj update thread running ");
 			
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(10000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 		}
 		
+	}
+	
+	public boolean updateWalletInfo()	{
+		return this.bitPayHttpsConnection.updateWalletInfo();
+	}
+	
+	public String getAccountBalance()	{
+		return this.bitPayHttpsConnection.getAccountBalance();
+	}
+	
+	public String getAcountBTCAddress()	{
+		return this.bitPayHttpsConnection.getAcountBTCAddress();
+	}
+
+	public String getSendAcountBTCAddress()	{
+		return this.sendAcountBTCAddress;
+	}
+	public void setSendAcountBTCAddress(String sendAcountBTCAddress)	{
+		this.sendAcountBTCAddress = sendAcountBTCAddress;
+	}
+	public String getAccountURL()	{
+		return this.bitPayHttpsConnection.getAccountURL();
+	}
+	
+	public boolean sendBTC(String sendAmount)	{
+		return this.bitPayHttpsConnection.sendBitCoins(this.sendAcountBTCAddress, sendAmount);
 	}
 	
 	private static final String TAG = "BitPayObj";

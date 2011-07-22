@@ -39,18 +39,18 @@ public class ReceiveActivity extends Activity implements TextWatcher, OnClickLis
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.receive_layout);
-
+		
 		accountAddressTextView = (TextView) findViewById(R.id.account_address2);
-		accountAddressTextView.setText(BitPay.account_pkey);
+		accountAddressTextView.setText(BitPayObj.getBitPayObj().getAcountBTCAddress());
 		accountAddressTextView.setOnClickListener(this);
 
-		
 		receiveAmountText = (EditText) findViewById(R.id.receive_amount);
 		receiveAmountText.addTextChangedListener(this);
 		
 		Double recAmount = Double.parseDouble("" + receiveAmountText.getText());
-		showQrBitmap(BitPay.account_pkey, recAmount, "test trans", "test");
+		showQrBitmap(BitPayObj.getBitPayObj().getAcountBTCAddress(), recAmount, "test trans", "test");
 
+		
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class ReceiveActivity extends Activity implements TextWatcher, OnClickLis
 	public void afterTextChanged(Editable s) {
 		try	{
 			Double recAmount = Double.parseDouble("" + receiveAmountText.getText());
-			showQrBitmap(BitPay.account_pkey, recAmount, "test trans", "test");
+			showQrBitmap(BitPayObj.getBitPayObj().getAcountBTCAddress(), recAmount, "test trans", "test");
 		}
 		catch(NumberFormatException e)	{
 			Log.v(TAG, "NumberFormatException");
