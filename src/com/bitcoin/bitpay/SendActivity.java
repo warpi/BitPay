@@ -51,8 +51,10 @@ public class SendActivity extends Activity implements OnClickListener {
 		Button button2 = (Button) findViewById(R.id.send_button);
 		button2.setOnClickListener(this);
 
-		amountText = (EditText) findViewById(R.id.input_amount);
+		Button button3 = (Button) findViewById(R.id.updateBalanceButton);
+		button3.setOnClickListener(this);
 
+		amountText = (EditText) findViewById(R.id.input_amount);
 
 	}
 
@@ -115,14 +117,29 @@ public class SendActivity extends Activity implements OnClickListener {
 					e.printStackTrace();
 				}
 			}
-			Toast.makeText(SendActivity.this,
-					"Balance updated.",
+			Toast.makeText(SendActivity.this, "Balance updated.",
 					Toast.LENGTH_LONG).show();
-			
-			balanceTextView.setText(BitPayObj.getBitPayObj().getAccountBalance()
-					+ " BTC");
-	
-			//TODO redraw
+
+			balanceTextView.setText(BitPayObj.getBitPayObj()
+					.getAccountBalance() + " BTC");
+
+			// TODO redraw
+		} else if (R.id.updateBalanceButton == arg0.getId()) {
+			// Load balance from Internet
+			while (!BitPayObj.getBitPayObj().updateWalletInfo()) {
+				Toast.makeText(SendActivity.this,
+						"Balance update failed, retry in 1 sec.",
+						Toast.LENGTH_LONG).show();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			Toast.makeText(SendActivity.this, "Balance updated.",
+					Toast.LENGTH_LONG).show();
+
 		}
 
 		else if (R.id.account_address1 == arg0.getId()) {

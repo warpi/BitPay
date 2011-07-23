@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  >
+  android:layout_height="fill_parent" android:layout_width="fill_parent">
 
 
     <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/account_address1"></TextView>
 <LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Balance: " android:id="@+id/balance_text1"></TextView>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/balance1" android:text="0 BTC"></TextView>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/updateBalanceButton" android:text="Reload balance"></Button>
 </LinearLayout>
 
 
