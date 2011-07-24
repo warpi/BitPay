@@ -173,21 +173,21 @@ public class BitPay extends TabActivity implements OnTouchListener,
 
 		if (tabId.equals("TAB_4_TAG")) {
 
-			// Load balance from Internet
-			while (!bitPayHttpsConnection.updateWalletInfo()) {
-				Toast.makeText(BitPay.this,
-						"Balance update failed, retry in 1 sec.",
-						Toast.LENGTH_LONG).show();
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-			Toast.makeText(BitPay.this, "Balance updated", Toast.LENGTH_LONG)
-					.show();
+//			// Load balance from Internet
+//			while (!bitPayHttpsConnection.updateWalletInfo()) {
+//				Toast.makeText(BitPay.this,
+//						"Balance update failed, retry in 1 sec.",
+//						Toast.LENGTH_LONG).show();
+//				try {
+//					Thread.sleep(1000);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//
+//			Toast.makeText(BitPay.this, "Balance updated", Toast.LENGTH_LONG)
+//					.show();
 		}
 	}
 	

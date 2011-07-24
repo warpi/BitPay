@@ -14,6 +14,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -127,7 +128,6 @@ public class BitPayHttpsConnection {
 							+ sendAcountBTCAddress
 							+ "&amount="
 							+ sendAmount);
-			 //String.valueOf("" + (long)(Double.parseDouble(this.amountText.getText().toString()) * 100000000)));
 			Pattern pattern = Pattern.compile("successful\": (.+?)\\}");
 			Matcher matcher = pattern.matcher(myString);
 			matcher.find();
@@ -136,12 +136,8 @@ public class BitPayHttpsConnection {
 			}
 											
 		} catch (Exception e) {
-
 			return false;
 		}
-
-		
-		
 		return false;
 	}
 	

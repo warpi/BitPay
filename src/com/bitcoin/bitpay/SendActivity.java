@@ -4,6 +4,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +24,7 @@ public class SendActivity extends Activity implements OnClickListener {
 	private TextView accountAddressTextView;
 	private TextView balanceTextView;
 	private EditText amountText;
+	private ProgressDialog gettingWebPageDialog;
 
 	Pattern pattern;
 	Matcher matcher;
@@ -55,6 +59,7 @@ public class SendActivity extends Activity implements OnClickListener {
 		button3.setOnClickListener(this);
 
 		amountText = (EditText) findViewById(R.id.input_amount);
+
 
 	}
 
@@ -91,41 +96,62 @@ public class SendActivity extends Activity implements OnClickListener {
 			// TODO make a confirm dialog, showing the receiver address and
 			// amount.
 
-			if (BitPayObj.getBitPayObj().sendBTC(
-					String.valueOf(""
-							+ (long) (Double.parseDouble(this.amountText
-									.getText().toString()) * 100000000)))) {
-				Toast.makeText(SendActivity.this, "Bitcoins sent",
-						Toast.LENGTH_LONG).show();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(
+					"Send " + this.amountText.getText().toString() + " BTC to "
+							+ receiveAccountTextView.getText() + "?")
+					.setCancelable(false)
+					.setPositiveButton("Confirm",
+							new DialogInterface.OnClickListener() {
 
-			} else {
-				Toast.makeText(SendActivity.this,
-						"Error, please check balance.", Toast.LENGTH_LONG)
-						.show();
+								public void onClick(DialogInterface dialog,
+										int id) {
 
-			}
+									dialog.cancel();
+									dialog.dismiss();
 
-			// Load balance from Internet
-			while (!BitPayObj.getBitPayObj().updateWalletInfo()) {
-				Toast.makeText(SendActivity.this,
-						"Balance update failed, retry in 1 sec.",
-						Toast.LENGTH_LONG).show();
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			Toast.makeText(SendActivity.this, "Balance updated.",
-					Toast.LENGTH_LONG).show();
+									gettingWebPageDialog = new ProgressDialog(
+											SendActivity.this);
+									gettingWebPageDialog
+											.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+									gettingWebPageDialog
+											.setMessage("Sending bitcoins");
+									gettingWebPageDialog.setCancelable(false);
+									gettingWebPageDialog.show();
+									gettingWebPageDialog.setProgress(10);
 
-			balanceTextView.setText(BitPayObj.getBitPayObj()
-					.getAccountBalance() + " BTC");
+									new Thread() {
+										public void run() {
+											// Do your shiz here
+											sendBTCDialog();
+											gettingWebPageDialog
+													.setProgress(100);
+											Log.v(TAG,
+													"thread start. send btc 3");
+
+											gettingWebPageDialog.dismiss();
+											Log.v(TAG,
+													"thread start. send btc 4");
+											gettingWebPageDialog.dismiss();
+										}
+									}.start();
+
+								}
+							})
+					.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							});
+			AlertDialog alert = builder.create();
+			alert.show();
 
 			// TODO redraw
 		} else if (R.id.updateBalanceButton == arg0.getId()) {
 			// Load balance from Internet
+
 			while (!BitPayObj.getBitPayObj().updateWalletInfo()) {
 				Toast.makeText(SendActivity.this,
 						"Balance update failed, retry in 1 sec.",
@@ -137,6 +163,10 @@ public class SendActivity extends Activity implements OnClickListener {
 					e.printStackTrace();
 				}
 			}
+
+			balanceTextView.setText(BitPayObj.getBitPayObj()
+					.getAccountBalance() + " BTC");
+
 			Toast.makeText(SendActivity.this, "Balance updated.",
 					Toast.LENGTH_LONG).show();
 
@@ -190,11 +220,48 @@ public class SendActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	private void sendBTCDialog() {
+
+		if (BitPayObj.getBitPayObj().sendBTC(
+				String.valueOf(""
+						+ (long) (Double.parseDouble(amountText.getText()
+								.toString()) * 100000000)))) {
+
+			// gettingWebPageDialog.setMessage("Bitcoins sent.");
+			gettingWebPageDialog.setProgress(50);
+
+		} else {
+			// gettingWebPageDialog.setMessage("Error, please check balance.");
+			gettingWebPageDialog.setProgress(50);
+
+		}
+		// gettingWebPageDialog.setMessage("Updating balance....");
+		gettingWebPageDialog.setProgress(50);
+
+		// Load balance from Internet
+		while (!BitPayObj.getBitPayObj().updateWalletInfo()) {
+			// gettingWebPageDialog.setMessage("Balance update failed, retry in 1 sec.");
+			gettingWebPageDialog.setProgress(75);
+
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		// gettingWebPageDialog.setsetMessage("Balance updated.");
+		gettingWebPageDialog.setProgress(75);
+
+	}
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 
 	}
 
 	private static final String TAG = "send_tab";
+
 
 }
