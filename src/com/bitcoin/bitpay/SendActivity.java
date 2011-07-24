@@ -60,9 +60,10 @@ public class SendActivity extends Activity implements OnClickListener {
 
 		amountText = (EditText) findViewById(R.id.input_amount);
 
-
 	}
 
+	
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -109,6 +110,8 @@ public class SendActivity extends Activity implements OnClickListener {
 
 									dialog.cancel();
 									dialog.dismiss();
+									
+
 
 									gettingWebPageDialog = new ProgressDialog(
 											SendActivity.this);
@@ -122,17 +125,18 @@ public class SendActivity extends Activity implements OnClickListener {
 
 									new Thread() {
 										public void run() {
-											// Do your shiz here
-											sendBTCDialog();
-											gettingWebPageDialog
-													.setProgress(100);
-											Log.v(TAG,
-													"thread start. send btc 3");
-
-											gettingWebPageDialog.dismiss();
-											Log.v(TAG,
-													"thread start. send btc 4");
-											gettingWebPageDialog.dismiss();
+											if(sendBTCDialog())	{
+												gettingWebPageDialog.dismiss();
+												Toast.makeText(SendActivity.this, "Bitcoins sent.",
+														Toast.LENGTH_LONG).show();	
+												
+											}
+											else {
+												gettingWebPageDialog.dismiss();
+												Toast.makeText(SendActivity.this, "Transaction Error please check balance.",
+														Toast.LENGTH_LONG).show();
+											}
+											
 										}
 									}.start();
 
@@ -147,7 +151,7 @@ public class SendActivity extends Activity implements OnClickListener {
 							});
 			AlertDialog alert = builder.create();
 			alert.show();
-
+			
 			// TODO redraw
 		} else if (R.id.updateBalanceButton == arg0.getId()) {
 			// Load balance from Internet
@@ -179,6 +183,9 @@ public class SendActivity extends Activity implements OnClickListener {
 					"Your bitcoin address is copied to clipboard.",
 					Toast.LENGTH_LONG).show();
 		}
+		
+		
+		
 
 	}
 
@@ -218,46 +225,49 @@ public class SendActivity extends Activity implements OnClickListener {
 				// Handle cancel
 			}
 		}
+		
+		balanceTextView.setText(BitPayObj.getBitPayObj().getAccountBalance()
+				+ " BTC");
+		receiveAccountTextView.setText(BitPayObj.getBitPayObj()
+				.getSendAcountBTCAddress());
+
 	}
 
-	private void sendBTCDialog() {
+	private boolean sendBTCDialog() {
 
 		if (BitPayObj.getBitPayObj().sendBTC(
 				String.valueOf(""
 						+ (long) (Double.parseDouble(amountText.getText()
 								.toString()) * 100000000)))) {
 
-			// gettingWebPageDialog.setMessage("Bitcoins sent.");
 			gettingWebPageDialog.setProgress(50);
 
-		} else {
-			// gettingWebPageDialog.setMessage("Error, please check balance.");
-			gettingWebPageDialog.setProgress(50);
+			// Load balance from Internet
+			while (!BitPayObj.getBitPayObj().updateWalletInfo()) {
+				gettingWebPageDialog.setProgress(75);
 
-		}
-		// gettingWebPageDialog.setMessage("Updating balance....");
-		gettingWebPageDialog.setProgress(50);
-
-		// Load balance from Internet
-		while (!BitPayObj.getBitPayObj().updateWalletInfo()) {
-			// gettingWebPageDialog.setMessage("Balance update failed, retry in 1 sec.");
-			gettingWebPageDialog.setProgress(75);
-
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			
+			return true;
+			
+		} else {
+			gettingWebPageDialog.setProgress(100);
+			return false;
 		}
-
-		// gettingWebPageDialog.setsetMessage("Balance updated.");
-		gettingWebPageDialog.setProgress(75);
-
 	}
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
+		balanceTextView.setText(BitPayObj.getBitPayObj().getAccountBalance()
+				+ " BTC");
+		receiveAccountTextView.setText(BitPayObj.getBitPayObj()
+				.getSendAcountBTCAddress());
 
 	}
 
