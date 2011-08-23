@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ public class SendActivity extends Activity implements OnClickListener {
 	private TextView accountAddressTextView;
 	private TextView balanceTextView;
 	private EditText amountText;
+	private CheckBox useGreenAddress;
 	private ProgressDialog gettingWebPageDialog;
 
 	Pattern pattern;
@@ -60,6 +62,7 @@ public class SendActivity extends Activity implements OnClickListener {
 
 		amountText = (EditText) findViewById(R.id.input_amount);
 
+		useGreenAddress = (CheckBox) findViewById(R.id.green_address);
 	}
 
 	
@@ -238,7 +241,7 @@ public class SendActivity extends Activity implements OnClickListener {
 		if (BitPayObj.getBitPayObj().sendBTC(
 				String.valueOf(""
 						+ (long) (Double.parseDouble(amountText.getText()
-								.toString()) * 100000000)))) {
+								.toString()) * 100000000)), useGreenAddress.isChecked())) {
 
 			gettingWebPageDialog.setProgress(50);
 

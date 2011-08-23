@@ -114,7 +114,7 @@ public class BitPayHttpsConnection {
 	}
 	
 	
-	public boolean sendBitCoins(String sendAcountBTCAddress, String sendAmount)	{
+	public boolean sendBitCoins(String sendAcountBTCAddress, String sendAmount, boolean useGreenAddress)	{
 		//sends bitcoins
 		String myString;
 		
@@ -127,7 +127,8 @@ public class BitPayHttpsConnection {
 					"address="
 							+ sendAcountBTCAddress
 							+ "&amount="
-							+ sendAmount);
+							+ sendAmount
+							+ (useGreenAddress ? "&use_green_address=true" : ""));
 			Pattern pattern = Pattern.compile("successful\": (.+?)\\}");
 			Matcher matcher = pattern.matcher(myString);
 			matcher.find();
