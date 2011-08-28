@@ -48,6 +48,7 @@ public class SendActivity extends Activity implements OnClickListener {
 				+ " BTC");
 
 		receiveAccountTextView = (TextView) findViewById(R.id.receive_account);
+		
 		receiveAccountTextView.setText(BitPayObj.getBitPayObj()
 				.getSendAcountBTCAddress());
 
@@ -63,6 +64,7 @@ public class SendActivity extends Activity implements OnClickListener {
 		amountText = (EditText) findViewById(R.id.input_amount);
 
 		useGreenAddress = (CheckBox) findViewById(R.id.green_address);
+
 	}
 
 	
@@ -256,7 +258,7 @@ public class SendActivity extends Activity implements OnClickListener {
 					e.printStackTrace();
 				}
 			}
-			
+			gettingWebPageDialog.setProgress(100);
 			return true;
 			
 		} else {
