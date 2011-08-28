@@ -66,8 +66,8 @@ public class BitPayObj implements Runnable {
 		return this.bitPayHttpsConnection.getAccountURL();
 	}
 	
-	public boolean sendBTC(String sendAmount)	{
-		return this.bitPayHttpsConnection.sendBitCoins(this.sendAcountBTCAddress, sendAmount);
+	public boolean sendBTC(String sendAmount, boolean useGreenAddress)	{
+		return this.bitPayHttpsConnection.sendBitCoins(this.sendAcountBTCAddress, sendAmount, useGreenAddress);
 	}
 	
 	private static final String TAG = "BitPayObj";

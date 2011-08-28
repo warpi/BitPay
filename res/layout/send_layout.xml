@@ -28,8 +28,11 @@
         <LinearLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/linearLayout2">
             <TextView android:layout_height="wrap_content" android:id="@+id/send_amount_text" android:text="Amount:" android:layout_width="70dip"></TextView>
             <EditText  android:singleLine="True" android:inputType="numberDecimal" android:layout_width="100dp" android:textSize="14dp" android:layout_height="33dp" android:text="0.00" android:id="@+id/input_amount"></EditText>
-			<Button android:layout_height="wrap_content" android:text="Send" android:layout_width="wrap_content" android:id="@+id/send_button"></Button>
+            <CheckBox android:layout_width="wrap_content" android:text="Use green address" android:id="@+id/green_address" android:layout_height="wrap_content"></CheckBox>
         </LinearLayout>
+    </TableLayout>
+    <TableLayout android:id="@+id/tableLayout4" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <Button android:text="Send" android:layout_width="wrap_content" android:layout_height="55dp" android:id="@+id/send_button"></Button>
     </TableLayout>
 
 </TableLayout>
