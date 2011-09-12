@@ -74,10 +74,6 @@ public class SendActivity extends Activity implements OnClickListener {
 		super.onResume();
 		Log.v(TAG, "onResume");
 
-		balanceTextView.setText(BitPayObj.getBitPayObj().getAccountBalance()
-				+ " BTC");
-		receiveAccountTextView.setText(BitPayObj.getBitPayObj()
-				.getSendAcountBTCAddress());
 
 	}
 
@@ -95,6 +91,9 @@ public class SendActivity extends Activity implements OnClickListener {
 			}
 
 		} else if (R.id.send_button == arg0.getId()) {
+			
+			BitPayObj.getBitPayObj().setSendAcountBTCAddress(receiveAccountTextView.getText().toString());
+			
 			Log.v(TAG, "onClick: Send, send "
 					+ this.amountText.getText().toString() + " to "
 					+ BitPayObj.getBitPayObj().getSendAcountBTCAddress());
@@ -138,7 +137,7 @@ public class SendActivity extends Activity implements OnClickListener {
 											}
 											else {
 												gettingWebPageDialog.dismiss();
-												Toast.makeText(SendActivity.this, "Transaction Error please check balance.",
+												Toast.makeText(SendActivity.this, "Transaction error....",
 														Toast.LENGTH_LONG).show();
 											}
 											
@@ -189,9 +188,6 @@ public class SendActivity extends Activity implements OnClickListener {
 					Toast.LENGTH_LONG).show();
 		}
 		
-		
-		
-
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -269,10 +265,6 @@ public class SendActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
-		balanceTextView.setText(BitPayObj.getBitPayObj().getAccountBalance()
-				+ " BTC");
-		receiveAccountTextView.setText(BitPayObj.getBitPayObj()
-				.getSendAcountBTCAddress());
 
 	}
 
